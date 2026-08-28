@@ -2,9 +2,9 @@ title: "내 개발 블로그"
 remote_theme: kitian616/jekyll-TeXt-theme
 baseurl: "/my-blog"
 
-# TeXt 테마 필수 스킨 및 언어 설정
-theme: default
-lang: ko
+text_skin: default   # default, dark, forest, ocean, chocolate, orange 중 선택
+
+highlight_theme: tomorrow-night-eighties
 
 plugins:
   - jekyll-remote-theme
