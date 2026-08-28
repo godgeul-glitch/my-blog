@@ -2,7 +2,7 @@ title: "내 개발 블로그"
 remote_theme: kitian616/jekyll-TeXt-theme
 baseurl: "/my-blog"
 
-text_skin: default   # default, dark, forest, ocean, chocolate, orange 중 선택
+text_skin: frozen   # 겨울왕국 컨셉 커스텀 스킨 (_sass/skins/_frozen.scss)
 
 highlight_theme: tomorrow-night-eighties
 
