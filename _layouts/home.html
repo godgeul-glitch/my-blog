@@ -17,11 +17,16 @@ show_title: false
   </div>
 </div>
 
-<section id="about" class="frozen-section">
+<section id="about" class="frozen-section frozen-section--about">
   <div class="frozen-section__inner">
     <h2 class="frozen-section__title">소개</h2>
-    <div class="frost-panel">
-      {{ content }}
+    <div class="about-flex">
+      <div class="frost-panel about-flex__text">
+        {{ content }}
+      </div>
+      <div class="about-flex__art" aria-hidden="true">
+        {%- include svg/fox.svg -%}
+      </div>
     </div>
   </div>
 </section>

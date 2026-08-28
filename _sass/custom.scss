@@ -285,6 +285,11 @@ html {
 .frozen-section--alt {
   background: rgba(79, 195, 247, .05);
 }
+.frozen-section--about {
+  background:
+    radial-gradient(ellipse at 80% 30%, rgba(124, 131, 253, .1), transparent 55%),
+    linear-gradient(180deg, rgba(79, 195, 247, .08) 0%, rgba(79, 195, 247, 0) 100%);
+}
 .frozen-section__inner {
   max-width: 920px;
   margin: 0 auto;
@@ -318,12 +323,43 @@ html {
 }
 
 .frost-panel {
-  background: rgba(255, 255, 255, .6);
+  background: linear-gradient(160deg, rgba(234, 246, 251, .7), rgba(255, 255, 255, .5));
   border: 1px solid rgba(144, 224, 239, .4);
   border-radius: 1rem;
   padding: 2rem;
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
+}
+
+.about-flex {
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+  flex-wrap: wrap;
+}
+.about-flex__text {
+  flex: 1 1 320px;
+}
+.about-flex__art {
+  flex: 0 0 auto;
+  width: min(260px, 80vw);
+  margin: 0 auto;
+}
+.frost-fox {
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 12px 20px rgba(79, 195, 247, .3));
+  animation: fox-bob 5s ease-in-out infinite;
+}
+@keyframes fox-bob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-8px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .frost-fox { animation: none !important; }
+}
+@media (max-width: 700px) {
+  .about-flex { flex-direction: column-reverse; }
 }
 
 .posts-grid {
