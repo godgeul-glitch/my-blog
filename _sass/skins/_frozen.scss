@@ -33,12 +33,12 @@ $text-color-l:     $text-color-theme-light-l;
 
 $text-background-color: rgba(#4fc3f7, .08);
 
-// header and footer colors
-$header-text-color: $text-color-3;
-$header-background: $main-color-3;
+// header and footer colors — deep ice-palace gradient with light frost text
+$header-text-color: #eaf6fb;
+$header-background: linear-gradient(120deg, #0a1a33 0%, #123156 35%, #1e5c8a 70%, #3f9bc4 100%);
 
-$footer-text-color: $text-color-theme-light-l;
-$footer-background: $main-color-3;
+$footer-text-color: rgba(#eaf6fb, .7);
+$footer-background: linear-gradient(120deg, #0a1a33 0%, #123156 100%);
 
 // border and shadow colors
 $border-color:     mix(#000, $background-color, 15%);
