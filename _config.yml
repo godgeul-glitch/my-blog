@@ -2,6 +2,10 @@ title: "내 개발 블로그"
 remote_theme: kitian616/jekyll-TeXt-theme
 baseurl: "/my-blog"
 
+# TeXt 테마 필수 스킨 및 언어 설정
+theme: default
+lang: ko
+
 plugins:
   - jekyll-remote-theme
   - jekyll-feed
