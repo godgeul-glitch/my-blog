@@ -1,4 +1,4 @@
-title: 안녕하세요!!!
-remote_theme: daattali/beautiful-jekyll@6.0.1
+title: "안녕하세요!!!"
+remote_theme: StartBootstrap/startbootstrap-clean-blog-jekyll
 baseurl: "/my-blog"
 
