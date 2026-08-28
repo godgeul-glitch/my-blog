@@ -1,0 +1,7 @@
+header:
+  - title: 소개
+    url: /#about
+  - title: 글 목록
+    url: /#posts
+  - title: 연락처
+    url: /#contact

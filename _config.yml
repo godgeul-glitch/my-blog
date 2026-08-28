@@ -6,6 +6,10 @@ text_skin: frozen   # 겨울왕국 컨셉 커스텀 스킨 (_sass/skins/_frozen.
 
 highlight_theme: tomorrow-night-eighties
 
+author:
+  name: godgeul-glitch
+  github: godgeul-glitch
+
 plugins:
   - jekyll-remote-theme
   - jekyll-feed

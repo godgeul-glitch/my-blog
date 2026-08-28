@@ -1,0 +1,55 @@
+---
+layout: page
+full_width: true
+show_title: false
+---
+
+<div class="hero-frozen" id="top">
+  <div class="hero-frozen__inner">
+    <p class="hero-frozen__eyebrow">❄ Frozen Dev Notes</p>
+    <h1 class="hero-frozen__title">{{ page.title | default: site.title }}</h1>
+    {%- if page.tagline -%}
+      <p class="hero-frozen__tagline">{{ page.tagline }}</p>
+    {%- endif -%}
+    <a href="#about" class="hero-frozen__scroll" aria-label="아래로 스크롤">
+      <i class="fas fa-chevron-down"></i>
+    </a>
+  </div>
+</div>
+
+<section id="about" class="frozen-section">
+  <div class="frozen-section__inner">
+    <h2 class="frozen-section__title">소개</h2>
+    <div class="frost-panel">
+      {{ content }}
+    </div>
+  </div>
+</section>
+
+<section id="posts" class="frozen-section frozen-section--alt">
+  <div class="frozen-section__inner">
+    <h2 class="frozen-section__title">{{ page.list_title | default: "지금까지 쓴 글" }}</h2>
+    <div class="posts-grid">
+      {%- for post in site.posts -%}
+        <article class="card posts-grid__item">
+          <div class="card__content">
+            <time class="posts-grid__date" datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%Y.%m.%d" }}</time>
+            <h3 class="posts-grid__title"><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h3>
+            <p class="posts-grid__excerpt">{{ post.excerpt | strip_html | strip_newlines | truncate: 90 }}</p>
+            <a href="{{ post.url | relative_url }}" class="posts-grid__readmore">더 읽기 →</a>
+          </div>
+        </article>
+      {%- else -%}
+        <p class="posts-grid__empty">아직 작성된 글이 없습니다.</p>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="frozen-section">
+  <div class="frozen-section__inner frozen-section__inner--center">
+    <h2 class="frozen-section__title">연락처</h2>
+    <p class="frozen-section__desc">궁금한 점이나 하고 싶은 말이 있다면 편하게 남겨주세요.</p>
+    {%- include author-links.html author=site.author -%}
+  </div>
+</section>
