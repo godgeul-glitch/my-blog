@@ -7,6 +7,20 @@
 {%- endif -%}
     <div class="main">
       <div class="header__title">
+        {%- if site.categories.size > 0 -%}
+        <div class="header__category-menu">
+          <button class="header__category-toggle" aria-label="카테고리 메뉴">
+            <span></span><span></span><span></span>
+          </button>
+          <div class="header__category-dropdown">
+            <ul>
+              {%- for _category in site.categories -%}
+                <li><a href="{{ '/#posts' | relative_url }}">{{ _category[0] }}</a></li>
+              {%- endfor -%}
+            </ul>
+          </div>
+        </div>
+        {%- endif -%}
         <div class="header__brand">
           {%- include svg/logo.svg -%}
           {%- assign _paths_root = site.paths.root | default: site.data.variables.default.paths.root  -%}
