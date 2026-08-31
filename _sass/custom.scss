@@ -230,10 +230,8 @@ html {
 }
 
 @keyframes snowflake-drift {
-  0%, 100% { background-position: 0 0, center top; }
-  25% { background-position: 20px 0, center top; }
-  50% { background-position: 0 0, center top; }
-  75% { background-position: -20px 0, center top; }
+  0% { background-position: -260px 0, center top; }
+  100% { background-position: 0 0, center top; }
 }
 
 .hero-frozen__inner {
