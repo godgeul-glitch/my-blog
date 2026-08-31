@@ -1,0 +1,158 @@
+{%- if include.theme == 'dark' -%}
+  <header class="header header--dark" {%- if include.background -%} style="background: {{ include.background }};" {%- endif -%}>
+{%- elsif include.theme == 'light' -%}
+  <header class="header header--light" {%- if include.background -%} style="background: {{ include.background }};" {%- endif -%}>
+{%- else -%}
+  <header class="header" {%- if include.background -%} style="background: {{ include.background }};" {%- endif -%}>
+{%- endif -%}
+    <div class="main">
+      <div class="header__title">
+        <div class="header__brand">
+          {%- include svg/logo.svg -%}
+          {%- assign _paths_root = site.paths.root | default: site.data.variables.default.paths.root  -%}
+          {%- include snippets/get-nav-url.html path=_paths_root -%}
+          {%- if site.title -%}
+            <a title="{%- if site.description -%}{{ site.description }}{%- endif -%}" href="{{ __return }}">{{ site.title }}</a>
+          {%- endif -%}
+        </div>
+        {%- if site.search.provider -%}
+          <button class="button button--secondary button--circle search-button js-search-toggle"><i class="fas fa-search"></i></button>
+        {%- endif -%}
+      </div>
+
+      <div class="header__search">
+        <input type="text" id="js-header-search-input" class="header__search-input" placeholder="글 검색..." autocomplete="off">
+        <div id="js-header-search-results" class="header__search-results"></div>
+      </div>
+
+      {%- if site.data.navigation.header -%}
+      <nav class="navigation">
+        <ul>
+          {%- for _item in site.data.navigation.header -%}
+            {%- include snippets/get-nav-url.html path=_item.url -%}
+            {%- assign _nav_url = __return -%}
+            {%- include snippets/get-nav-url.html path=page.url -%}
+            {%- assign _page_url = __return -%}
+            {%- include snippets/get-string-from-locale-config.html locale=_item.titles -%}
+            {%- if _nav_url == _page_url or page.nav_key and _item.key and page.nav_key == _item.key -%}
+              <li class="navigation__item navigation__item--active"><a href="{{ _nav_url }}">{%- if _item.title -%}{{ _item.title }}{%- else -%}{{ __return }}{%- endif -%}</a></li>
+            {%- else -%}
+              <li class="navigation__item"><a href="{{ _nav_url }}">{%- if _item.title -%}{{ _item.title }}{%- else -%}{{ __return }}{%- endif -%}</a></li>
+            {%- endif -%}
+          {%- endfor -%}
+          {%- if site.search.provider -%}
+            <li><button class="button button--secondary button--circle search-button js-search-toggle"><i class="fas fa-search"></i></button></li>
+          {%- endif -%}
+        </ul>
+      </nav>
+      {%- endif -%}
+    </div>
+  </header>
+
+<script>
+(function() {
+  var input = document.getElementById('js-header-search-input');
+  var results = document.getElementById('js-header-search-results');
+  if (!input || !results) { return; }
+
+  var posts = null;
+  var activeIndex = -1;
+  var currentMatches = [];
+  var maxItems = 6;
+
+  function fetchPosts(callback) {
+    if (posts) { callback(posts); return; }
+    fetch('{{ "/search.json" | relative_url }}')
+      .then(function(res) { return res.json(); })
+      .then(function(data) { posts = data; callback(posts); })
+      .catch(function() { posts = []; callback(posts); });
+  }
+
+  function closeResults() {
+    results.classList.remove('is-open');
+    results.innerHTML = '';
+    currentMatches = [];
+    activeIndex = -1;
+  }
+
+  function setActive(index) {
+    var items = results.querySelectorAll('.header__search-result-item');
+    items.forEach(function(el) { el.classList.remove('is-active'); });
+    if (items[index]) {
+      items[index].classList.add('is-active');
+      activeIndex = index;
+    }
+  }
+
+  function renderMatches(matches) {
+    currentMatches = matches;
+    activeIndex = -1;
+    results.innerHTML = '';
+
+    if (!matches.length) {
+      closeResults();
+      return;
+    }
+
+    matches.slice(0, maxItems).forEach(function(post) {
+      var item = document.createElement('a');
+      item.href = post.url;
+      item.className = 'header__search-result-item';
+
+      var title = document.createElement('span');
+      title.className = 'header__search-result-title';
+      title.textContent = post.title;
+
+      var date = document.createElement('span');
+      date.className = 'header__search-result-date';
+      date.textContent = post.date;
+
+      item.appendChild(title);
+      item.appendChild(date);
+      results.appendChild(item);
+    });
+
+    results.classList.add('is-open');
+  }
+
+  input.addEventListener('input', function() {
+    var query = input.value.trim().toLowerCase();
+    if (!query) { closeResults(); return; }
+
+    fetchPosts(function(list) {
+      var matches = list.filter(function(post) {
+        return post.title.toLowerCase().indexOf(query) !== -1 ||
+          (post.excerpt && post.excerpt.toLowerCase().indexOf(query) !== -1);
+      });
+      renderMatches(matches);
+    });
+  });
+
+  input.addEventListener('keydown', function(e) {
+    var count = Math.min(currentMatches.length, maxItems);
+
+    if (e.key === 'ArrowDown') {
+      if (!count) { return; }
+      e.preventDefault();
+      setActive((activeIndex + 1) % count);
+    } else if (e.key === 'ArrowUp') {
+      if (!count) { return; }
+      e.preventDefault();
+      setActive((activeIndex - 1 + count) % count);
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      var target = currentMatches[activeIndex >= 0 ? activeIndex : 0];
+      if (target) { window.location.href = target.url; }
+    } else if (e.key === 'Escape') {
+      closeResults();
+      input.blur();
+    }
+  });
+
+  document.addEventListener('click', function(e) {
+    if (e.target !== input && !results.contains(e.target)) {
+      closeResults();
+    }
+  });
+})();
+</script>
