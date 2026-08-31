@@ -90,6 +90,7 @@ body::after {
 /* ---- header: shifting ice-palace gradient with sparkle glints ---- */
 .header {
   position: relative;
+  z-index: 100;
   background-size: 200% 200% !important;
   animation: frost-shift 16s ease-in-out infinite;
   border-bottom: 1px solid rgba(144, 224, 239, .45);
