@@ -1,4 +1,8 @@
-# 마크다운 문법
+---
+layout: article
+title: "마크다운 문법"
+permalink: /markdown-syntax.html
+---
 
 ## 제목은 # 갯수로 단계를 만들 수 있다.
 
