@@ -94,7 +94,6 @@ body::after {
   animation: frost-shift 16s ease-in-out infinite;
   border-bottom: 1px solid rgba(144, 224, 239, .45);
   box-shadow: 0 4px 26px rgba(10, 26, 51, .35);
-  overflow: hidden;
 }
 
 @keyframes frost-shift {
