@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: article
 title: "main에 직접 커밋하다 생긴 충돌, 기능별 브랜치 전략으로 해결하기"
 date: 2026-08-31 18:00:00 +0900
 categories: [Git]

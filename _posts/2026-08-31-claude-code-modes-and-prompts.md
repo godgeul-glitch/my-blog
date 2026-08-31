@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: article
 title: "클로드 코드 모드와 좋은 프롬프트 쓰는 법"
 date: 2026-08-31
 mermaid: true

@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: article
 title: "어제 배운 Git 정리"
 date: 2026-08-28
 excerpt: "git add, commit, push가 왜 세 단계로 나뉘어 있는지, 그리고 git log에서 멈춘 것처럼 보일 때 빠져나오는 법을 정리했다."

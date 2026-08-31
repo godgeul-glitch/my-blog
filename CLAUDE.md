@@ -172,7 +172,7 @@ YYYY-MM-DD-제목.md
 
 ```yaml
 ---
-layout: post
+layout: article
 title: "브라우저 캐싱 문제를 React Query로 해결하기"
 date: 2026-08-30 14:00:00 +0900
 categories: [Frontend]
@@ -182,7 +182,7 @@ tags: [react, react-query, caching]
 
 | 항목 | 필수 여부 | 규칙 |
 |------|-----------|------|
-| `layout` | 필수 | 테마에서 제공하는 레이아웃 이름 (보통 `post`) |
+| `layout` | 필수 | 테마에서 제공하는 레이아웃 이름 (이 블로그는 `article`) |
 | `title` | 필수 | 글 제목. 콜론(`:`) 등 특수문자 포함 시 반드시 따옴표로 감싼다 |
 | `date` | 필수 | 파일명 날짜와 일치, 한국 시간대 `+0900` 명시 |
 | `categories` | 권장 | 1~2개, 대분류 중심 |
@@ -212,7 +212,7 @@ Jekyll 기본 설정은 Mermaid를 렌더링하지 않는다. 아래 중 하나�
 
 ```yaml
 ---
-layout: post
+layout: article
 title: "..."
 mermaid: true   # Mermaid 다이어그램을 쓰는 글에는 반드시 추가
 ---
@@ -237,7 +237,7 @@ Agent는 초안 작성 시 아래 골격을 따른다. **Front Matter를 포함�
 
 ```markdown
 ---
-layout: post
+layout: article
 title: "[문제 중심의 제목 — 'OO 기술 사용기'가 아닌 'OO 문제를 OO로 해결하기']"
 date: YYYY-MM-DD HH:MM:SS +0900
 categories: [카테고리]

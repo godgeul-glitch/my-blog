@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: article
 title: "이번 주 배운 Git 명령어 정리"
 date: 2026-08-31
 mermaid: true
