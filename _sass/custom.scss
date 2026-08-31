@@ -190,7 +190,9 @@ body::after {
   margin: 0;
   padding: 0;
 }
-.header__category-dropdown li a {
+.header .header__category-dropdown li a,
+.header .header__category-dropdown li a:link,
+.header .header__category-dropdown li a:visited {
   display: block;
   padding: .55rem 1rem;
   font-size: .85rem;
@@ -198,8 +200,9 @@ body::after {
   text-decoration: none;
   white-space: nowrap;
 }
-.header__category-dropdown li a:hover {
+.header .header__category-dropdown li a:hover {
   background: rgba(79, 195, 247, .12);
+  color: var(--frost-navy);
 }
 
 .navigation {
