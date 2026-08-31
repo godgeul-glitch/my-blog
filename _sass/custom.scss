@@ -132,11 +132,11 @@ body::after {
   text-shadow: 0 0 14px rgba(144, 224, 239, .65), 0 0 30px rgba(79, 195, 247, .35);
 }
 
-/* ---- hidden category menu: invisible hamburger left of the logo, reveals on hover ---- */
+/* ---- category menu: hamburger pinned at the header's left edge, always visible; hover reveals the dropdown ---- */
 .header__category-menu {
   position: relative;
   z-index: 2;
-  margin-right: .5rem;
+  margin-right: .75rem;
 }
 
 .header__category-toggle {
@@ -151,7 +151,7 @@ body::after {
   border: none;
   background: transparent;
   cursor: pointer;
-  opacity: 0;
+  opacity: .85;
   transition: opacity .2s ease-in-out;
 }
 .header__category-toggle span {
