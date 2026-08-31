@@ -1,6 +1,6 @@
 ---
 layout: home
-title: 학습 노트
+title: 재성이의 학습노트
 tagline: 매일 배운 것을 눈송이처럼 하나씩 쌓아갑니다.
 list_title: 지금까지 쓴 글
 ---
