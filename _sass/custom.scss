@@ -141,24 +141,23 @@ body::after {
   text-shadow: 0 0 10px rgba(144, 224, 239, .7);
 }
 
-/* ---- header search: centered search box + dropdown results ---- */
+/* ---- header search: search box in its own column so nav never overlaps it ---- */
 .header .main {
   position: relative;
-  display: flex;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  justify-content: space-between;
+  gap: 1rem;
 }
 
 .header__search {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
+  position: relative;
   z-index: 2;
   display: flex;
   justify-content: center;
   width: 100%;
   max-width: 460px;
+  margin: 0 auto;
   pointer-events: none;
 }
 
