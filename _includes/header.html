@@ -17,7 +17,7 @@
             <ul>
               {%- for _group in _date_groups -%}
                 {%- assign _sample = _group.items.first -%}
-                <li><a href="{{ '/' | relative_url }}#date-{{ _group.name }}">{{ _sample.date | date: "%Y.%m.%d" }}</a></li>
+                <li><a class="js-date-jump" href="{{ '/' | relative_url }}#date-{{ _group.name }}" data-date-target="date-{{ _group.name }}">{{ _sample.date | date: "%Y.%m.%d" }}</a></li>
               {%- endfor -%}
             </ul>
           </div>
@@ -170,5 +170,36 @@
       closeResults();
     }
   });
+})();
+
+(function() {
+  var HEADER_OFFSET = 90;
+
+  function jumpTo(id) {
+    var el = document.getElementById(id);
+    if (!el) { return; }
+    var html = document.documentElement;
+    var prevBehavior = html.style.scrollBehavior;
+    html.style.scrollBehavior = 'auto';
+    var top = el.getBoundingClientRect().top + window.pageYOffset - HEADER_OFFSET;
+    window.scrollTo(0, top);
+    html.style.scrollBehavior = prevBehavior;
+  }
+
+  document.querySelectorAll('.js-date-jump').forEach(function(link) {
+    link.addEventListener('click', function(e) {
+      var id = link.getAttribute('data-date-target');
+      if (!id || !document.getElementById(id)) { return; }
+      e.preventDefault();
+      history.pushState(null, '', link.getAttribute('href'));
+      jumpTo(id);
+    });
+  });
+
+  if (location.hash.indexOf('#date-') === 0) {
+    window.addEventListener('load', function() {
+      jumpTo(location.hash.slice(1));
+    });
+  }
 })();
 </script>
