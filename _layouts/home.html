@@ -35,8 +35,11 @@ show_title: false
   <div class="frozen-section__inner">
     <h2 class="frozen-section__title">{{ page.list_title | default: "지금까지 쓴 글" }}</h2>
     <div class="posts-grid">
+      {%- assign _last_date = "" -%}
       {%- for post in site.posts -%}
-        <article class="card posts-grid__item">
+        {%- assign _this_date = post.date | date: "%Y-%m-%d" -%}
+        <article class="card posts-grid__item"{%- if _this_date != _last_date %} id="date-{{ _this_date }}"{%- endif -%}>
+          {%- assign _last_date = _this_date -%}
           <div class="card__content">
             <time class="posts-grid__date" datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%Y.%m.%d" }}</time>
             <h3 class="posts-grid__title"><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h3>

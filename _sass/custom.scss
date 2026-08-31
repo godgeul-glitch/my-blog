@@ -205,6 +205,11 @@ body::after {
   color: var(--frost-navy);
 }
 
+/* ---- date-anchor jump target: keep the linked card clear of the header on landing ---- */
+.posts-grid__item[id^="date-"] {
+  scroll-margin-top: 6rem;
+}
+
 .navigation {
   position: relative;
   z-index: 1;
