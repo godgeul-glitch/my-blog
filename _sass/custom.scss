@@ -515,7 +515,9 @@ body::after {
 .header .header__search-result-item,
 .header .header__search-result-item:link,
 .header .header__search-result-item:visited {
-  color: var(--frost-navy) !important;
+  /* literal hex, not var(--frost-navy): CSS custom properties can silently
+     fail to resolve inside the browser's privacy-restricted :visited cascade */
+  color: #163a5f !important;
 }
 .header__search-result-item:last-child {
   border-bottom: none;
