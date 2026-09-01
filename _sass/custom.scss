@@ -205,6 +205,12 @@ body::after {
   color: var(--frost-navy);
 }
 
+.header__category-dropdown-divider {
+  margin: .3rem 0;
+  border: none;
+  border-top: 1px solid var(--frost-ice);
+}
+
 /* ---- date-anchor jump target: keep the linked row clear of the header on landing ---- */
 .posts-grid__row[id^="date-"] {
   scroll-margin-top: 6rem;

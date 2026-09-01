@@ -14,6 +14,14 @@
             <span></span><span></span><span></span>
           </button>
           <div class="header__category-dropdown">
+            {%- if site.categories.size > 0 -%}
+            <ul class="header__category-dropdown-categories">
+              {%- for _category in site.categories -%}
+                <li><a href="{{ '/' | relative_url }}#posts">{{ _category[0] }}</a></li>
+              {%- endfor -%}
+            </ul>
+            <hr class="header__category-dropdown-divider">
+            {%- endif -%}
             <ul>
               {%- for _group in _date_groups -%}
                 {%- assign _sample = _group.items.first -%}
