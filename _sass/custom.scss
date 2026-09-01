@@ -180,10 +180,6 @@ body::after {
   box-shadow: 0 14px 30px rgba(10, 26, 51, .3);
   overflow: hidden;
 }
-.header__category-dropdown:has(.header__calendar) {
-  min-width: 280px;
-  overflow: visible;
-}
 .header__category-menu:hover .header__category-dropdown,
 .header__category-toggle:focus-visible ~ .header__category-dropdown {
   display: block;
@@ -215,99 +211,131 @@ body::after {
   border-top: 1px solid var(--frost-ice);
 }
 
-/* ---- calendar: month grid in the dropdown, snowflakes mark days with posts ---- */
-.header__calendar {
-  padding: .6rem .7rem .7rem;
+/* ---- archive calendar: month grid on the home page, snowflakes mark days with posts ---- */
+.archive-calendar {
+  max-width: 420px;
+  margin: 0 auto 2rem;
+  background: var(--frost-snow);
+  border: 1px solid var(--frost-ice);
+  border-radius: 1rem;
+  padding: 1.25rem 1.5rem 1.5rem;
+  box-shadow: 0 10px 26px rgba(10, 26, 51, .08);
 }
-.header__calendar-head {
+.archive-calendar-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: .4rem;
+  margin-bottom: .9rem;
 }
-.header__calendar-title {
-  font-size: .85rem;
+.archive-calendar-title {
+  font-size: 1.05rem;
   font-weight: 700;
   color: var(--frost-navy);
 }
-.header__calendar-nav {
+.archive-calendar-nav {
   border: none;
   background: transparent;
   color: var(--frost-blue);
-  font-size: 1.1rem;
+  font-size: 1.5rem;
   line-height: 1;
   cursor: pointer;
-  padding: .1rem .4rem;
-  border-radius: .3rem;
+  padding: .1rem .6rem;
+  border-radius: .4rem;
 }
-.header__calendar-nav:hover {
+.archive-calendar-nav:hover {
   background: rgba(79, 195, 247, .12);
 }
-.header__calendar-weekdays,
-.header__calendar-grid {
+.archive-calendar-weekdays,
+.archive-calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 2px;
+  gap: 4px;
 }
-.header__calendar-weekdays {
-  margin-bottom: .2rem;
+.archive-calendar-weekdays {
+  margin-bottom: .3rem;
 }
-.header__calendar-weekdays span {
+.archive-calendar-weekdays span {
   text-align: center;
-  font-size: .68rem;
+  font-size: .8rem;
   color: var(--frost-navy);
   opacity: .55;
 }
-.header__calendar-cell {
+.archive-calendar-cell {
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   aspect-ratio: 1;
-  border-radius: .35rem;
-  font-size: .72rem;
+  border-radius: .5rem;
+  font-size: .9rem;
   color: var(--frost-navy);
   text-decoration: none;
+  border: none;
+  background: transparent;
+  font-family: inherit;
 }
-.header__calendar-cell--pad {
+.archive-calendar-cell--pad {
   visibility: hidden;
 }
-.header__calendar-daynum {
-  line-height: 1.1;
+.archive-calendar-daynum {
+  line-height: 1.2;
 }
-.header__calendar-cell--has-posts {
-  background: var(--frost-main-soft, rgba(79, 195, 247, .1));
+.archive-calendar-cell--has-posts {
+  background: rgba(79, 195, 247, .1);
   font-weight: 700;
   cursor: pointer;
 }
-.header__calendar-cell--has-posts:hover {
+.archive-calendar-cell--has-posts:hover {
   background: rgba(79, 195, 247, .25);
 }
-.header__calendar-flakes {
-  font-size: .6rem;
+.archive-calendar-cell--selected {
+  background: var(--frost-blue) !important;
+  color: #fff;
+}
+.archive-calendar-flakes {
+  font-size: .7rem;
   line-height: 1;
   color: var(--frost-blue);
   letter-spacing: -1px;
 }
-.header__calendar-badge {
+.archive-calendar-cell--selected .archive-calendar-flakes {
+  color: #fff;
+}
+.archive-calendar-badge {
   position: absolute;
   top: -3px;
   right: -3px;
-  min-width: 13px;
-  height: 13px;
-  padding: 0 2px;
+  min-width: 15px;
+  height: 15px;
+  padding: 0 3px;
   border-radius: 999px;
   background: var(--frost-lilac);
   color: #fff;
-  font-size: .55rem;
+  font-size: .6rem;
   font-weight: 700;
-  line-height: 13px;
+  line-height: 15px;
   text-align: center;
 }
+.archive-results {
+  max-width: 640px;
+  margin: 0 auto;
+}
+.archive-results__heading {
+  text-align: center;
+  color: var(--frost-navy);
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+.archive-results .posts-grid__row {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.5rem;
+}
 
-/* ---- date-anchor jump target: keep the linked row clear of the header on landing ---- */
-.posts-grid__row[id^="date-"] {
+/* ---- date-anchor jump target: keep the anchor clear of the header on landing ---- */
+.archive-date-anchor {
+  display: block;
   scroll-margin-top: 6rem;
 }
 

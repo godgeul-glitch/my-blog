@@ -23,24 +23,12 @@
             </ul>
             <hr class="header__category-dropdown-divider">
             {%- endif -%}
-            <div class="header__calendar" id="js-header-calendar">
-              <div class="header__calendar-head">
-                <button type="button" class="header__calendar-nav" data-dir="-1" aria-label="이전 달">‹</button>
-                <span class="header__calendar-title" id="js-calendar-title"></span>
-                <button type="button" class="header__calendar-nav" data-dir="1" aria-label="다음 달">›</button>
-              </div>
-              <div class="header__calendar-weekdays">
-                <span>일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span>
-              </div>
-              <div class="header__calendar-grid" id="js-calendar-grid"></div>
-            </div>
-            <script id="js-calendar-data" type="application/json">
-              [
-                {%- for _group in _date_groups -%}
-                  {"date":"{{ _group.name }}","count":{{ _group.items.size }}}{% unless forloop.last %},{% endunless %}
-                {%- endfor -%}
-              ]
-            </script>
+            <ul>
+              {%- for _group in _date_groups -%}
+                {%- assign _sample = _group.items.first -%}
+                <li><a class="js-date-jump" href="{{ '/' | relative_url }}#date-{{ _group.name }}" data-date-target="date-{{ _group.name }}">{{ _sample.date | date: "%Y.%m.%d" }}</a></li>
+              {%- endfor -%}
+            </ul>
           </div>
         </div>
         {%- endif -%}
@@ -222,116 +210,5 @@
       jumpTo(location.hash.slice(1));
     });
   }
-})();
-
-(function() {
-  var grid = document.getElementById('js-calendar-grid');
-  var title = document.getElementById('js-calendar-title');
-  var dataEl = document.getElementById('js-calendar-data');
-  var calendar = document.getElementById('js-header-calendar');
-  if (!grid || !title || !dataEl || !calendar) { return; }
-
-  var SITE_ROOT = '{{ "/" | relative_url }}';
-  var counts = {};
-  try {
-    JSON.parse(dataEl.textContent).forEach(function(row) {
-      counts[row.date] = row.count;
-    });
-  } catch (e) {}
-
-  var dateKeys = Object.keys(counts).sort();
-  var todayView = dateKeys.length ? dateKeys[dateKeys.length - 1] : null;
-  var viewYear, viewMonth;
-  if (todayView) {
-    viewYear = parseInt(todayView.slice(0, 4), 10);
-    viewMonth = parseInt(todayView.slice(5, 7), 10) - 1;
-  } else {
-    var now = new Date();
-    viewYear = now.getFullYear();
-    viewMonth = now.getMonth();
-  }
-
-  function pad2(n) { return n < 10 ? '0' + n : '' + n; }
-
-  function render() {
-    title.textContent = viewYear + '년 ' + (viewMonth + 1) + '월';
-    grid.innerHTML = '';
-
-    var firstDay = new Date(viewYear, viewMonth, 1).getDay();
-    var daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
-
-    for (var i = 0; i < firstDay; i++) {
-      var pad = document.createElement('span');
-      pad.className = 'header__calendar-cell header__calendar-cell--pad';
-      grid.appendChild(pad);
-    }
-
-    for (var d = 1; d <= daysInMonth; d++) {
-      var dateStr = viewYear + '-' + pad2(viewMonth + 1) + '-' + pad2(d);
-      var count = counts[dateStr] || 0;
-      var cell;
-
-      if (count > 0) {
-        cell = document.createElement('a');
-        cell.href = SITE_ROOT + '#date-' + dateStr;
-        cell.className = 'header__calendar-cell header__calendar-cell--has-posts';
-        cell.setAttribute('aria-label', dateStr + ' 글 ' + count + '개');
-        cell.addEventListener('click', function(targetDateStr) {
-          return function(e) {
-            var id = 'date-' + targetDateStr;
-            if (!document.getElementById(id)) { return; }
-            e.preventDefault();
-            history.pushState(null, '', SITE_ROOT + '#' + id);
-            jumpToCalendarTarget(id);
-          };
-        }(dateStr));
-
-        var num = document.createElement('span');
-        num.className = 'header__calendar-daynum';
-        num.textContent = d;
-        cell.appendChild(num);
-
-        var flakes = document.createElement('span');
-        flakes.className = 'header__calendar-flakes';
-        flakes.textContent = '❄'.repeat(Math.min(count, 3));
-        cell.appendChild(flakes);
-
-        if (count > 3) {
-          var badge = document.createElement('span');
-          badge.className = 'header__calendar-badge';
-          badge.textContent = count;
-          cell.appendChild(badge);
-        }
-      } else {
-        cell = document.createElement('span');
-        cell.className = 'header__calendar-cell';
-        cell.textContent = d;
-      }
-
-      grid.appendChild(cell);
-    }
-  }
-
-  function jumpToCalendarTarget(id) {
-    var el = document.getElementById(id);
-    if (!el) { return; }
-    var html = document.documentElement;
-    var prevBehavior = html.style.scrollBehavior;
-    html.style.scrollBehavior = 'auto';
-    var top = el.getBoundingClientRect().top + window.pageYOffset - 90;
-    window.scrollTo(0, top);
-    html.style.scrollBehavior = prevBehavior;
-  }
-
-  calendar.querySelectorAll('.header__calendar-nav').forEach(function(btn) {
-    btn.addEventListener('click', function() {
-      viewMonth += parseInt(btn.getAttribute('data-dir'), 10);
-      if (viewMonth < 0) { viewMonth = 11; viewYear--; }
-      if (viewMonth > 11) { viewMonth = 0; viewYear++; }
-      render();
-    });
-  });
-
-  render();
 })();
 </script>

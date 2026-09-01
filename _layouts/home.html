@@ -34,25 +34,48 @@ show_title: false
 <section id="posts" class="frozen-section frozen-section--alt">
   <div class="frozen-section__inner">
     <h2 class="frozen-section__title">{{ page.list_title | default: "지금까지 쓴 글" }}</h2>
-    <div class="posts-grid">
-      {%- assign _date_groups = site.posts | group_by_exp: "post", "post.date | date: '%Y-%m-%d'" -%}
-      {%- for _group in _date_groups -%}
-        <div class="posts-grid__row" id="date-{{ _group.name }}">
-          {%- for post in _group.items -%}
-            <article class="card posts-grid__item">
-              <div class="card__content">
-                <time class="posts-grid__date" datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%Y.%m.%d" }}</time>
-                <h3 class="posts-grid__title"><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h3>
-                <p class="posts-grid__excerpt">{{ post.excerpt | strip_html | strip_newlines | truncate: 90 }}</p>
-                <a href="{{ post.url | relative_url }}" class="posts-grid__readmore">더 읽기 →</a>
-              </div>
-            </article>
-          {%- endfor -%}
-        </div>
-      {%- else -%}
-        <p class="posts-grid__empty">아직 작성된 글이 없습니다.</p>
-      {%- endfor -%}
+
+    {%- assign _date_groups = site.posts | group_by_exp: "post", "post.date | date: '%Y-%m-%d'" -%}
+
+    {%- if _date_groups.size > 0 -%}
+    {%- for _group in _date_groups -%}
+      <span id="date-{{ _group.name }}" class="archive-date-anchor" aria-hidden="true"></span>
+    {%- endfor -%}
+    <div class="archive-calendar" id="js-archive-calendar">
+      <div class="archive-calendar-head">
+        <button type="button" class="archive-calendar-nav" data-dir="-1" aria-label="이전 달">‹</button>
+        <span class="archive-calendar-title" id="js-archive-calendar-title"></span>
+        <button type="button" class="archive-calendar-nav" data-dir="1" aria-label="다음 달">›</button>
+      </div>
+      <div class="archive-calendar-weekdays">
+        <span>일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span>
+      </div>
+      <div class="archive-calendar-grid" id="js-archive-calendar-grid"></div>
     </div>
+
+    <div class="archive-results" id="js-archive-results">
+      <p class="posts-grid__empty">날짜를 선택하면 그날 쓴 글이 여기에 표시됩니다.</p>
+    </div>
+
+    <script id="js-archive-data" type="application/json">
+      {
+        {%- for _group in _date_groups -%}
+          "{{ _group.name }}": [
+            {%- for post in _group.items -%}
+              {
+                "url": "{{ post.url | relative_url }}",
+                "title": {{ post.title | jsonify }},
+                "excerpt": {{ post.excerpt | strip_html | strip_newlines | truncate: 90 | jsonify }},
+                "date": "{{ post.date | date: '%Y.%m.%d' }}"
+              }{% unless forloop.last %},{% endunless %}
+            {%- endfor -%}
+          ]{% unless forloop.last %},{% endunless %}
+        {%- endfor -%}
+      }
+    </script>
+    {%- else -%}
+      <p class="posts-grid__empty">아직 작성된 글이 없습니다.</p>
+    {%- endif -%}
   </div>
 </section>
 
@@ -63,3 +86,142 @@ show_title: false
     {%- include author-links.html author=site.author -%}
   </div>
 </section>
+
+<script>
+(function() {
+  var grid = document.getElementById('js-archive-calendar-grid');
+  var title = document.getElementById('js-archive-calendar-title');
+  var dataEl = document.getElementById('js-archive-data');
+  var calendar = document.getElementById('js-archive-calendar');
+  var results = document.getElementById('js-archive-results');
+  if (!grid || !title || !dataEl || !calendar || !results) { return; }
+
+  var byDate = {};
+  try { byDate = JSON.parse(dataEl.textContent); } catch (e) {}
+
+  var dateKeys = Object.keys(byDate).sort();
+  if (!dateKeys.length) { return; }
+
+  var latest = dateKeys[dateKeys.length - 1];
+  var hashDate = location.hash.indexOf('#date-') === 0 ? location.hash.slice(6) : null;
+  var initialDate = (hashDate && byDate[hashDate]) ? hashDate : latest;
+  var viewYear = parseInt(initialDate.slice(0, 4), 10);
+  var viewMonth = parseInt(initialDate.slice(5, 7), 10) - 1;
+  var selectedDate = initialDate;
+
+  function pad2(n) { return n < 10 ? '0' + n : '' + n; }
+
+  function renderResults(dateStr) {
+    selectedDate = dateStr;
+    var posts = byDate[dateStr] || [];
+    results.innerHTML = '';
+
+    var heading = document.createElement('p');
+    heading.className = 'archive-results__heading';
+    heading.textContent = dateStr.replace(/-/g, '.') + ' 에 쓴 글 (' + posts.length + '개)';
+    results.appendChild(heading);
+
+    var row = document.createElement('div');
+    row.className = 'posts-grid__row';
+
+    posts.forEach(function(post) {
+      var article = document.createElement('article');
+      article.className = 'card posts-grid__item';
+      article.innerHTML =
+        '<div class="card__content">' +
+          '<time class="posts-grid__date">' + post.date + '</time>' +
+          '<h3 class="posts-grid__title"><a href="' + post.url + '"></a></h3>' +
+          '<p class="posts-grid__excerpt"></p>' +
+          '<a class="posts-grid__readmore" href="' + post.url + '">더 읽기 →</a>' +
+        '</div>';
+      article.querySelector('.posts-grid__title a').textContent = post.title;
+      article.querySelector('.posts-grid__excerpt').textContent = post.excerpt;
+      row.appendChild(article);
+    });
+
+    results.appendChild(row);
+  }
+
+  function renderCalendar() {
+    title.textContent = viewYear + '년 ' + (viewMonth + 1) + '월';
+    grid.innerHTML = '';
+
+    var firstDay = new Date(viewYear, viewMonth, 1).getDay();
+    var daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+
+    for (var i = 0; i < firstDay; i++) {
+      var pad = document.createElement('span');
+      pad.className = 'archive-calendar-cell archive-calendar-cell--pad';
+      grid.appendChild(pad);
+    }
+
+    for (var d = 1; d <= daysInMonth; d++) {
+      var dateStr = viewYear + '-' + pad2(viewMonth + 1) + '-' + pad2(d);
+      var posts = byDate[dateStr];
+      var cell;
+
+      if (posts && posts.length) {
+        cell = document.createElement('button');
+        cell.type = 'button';
+        cell.className = 'archive-calendar-cell archive-calendar-cell--has-posts';
+        if (dateStr === selectedDate) { cell.className += ' archive-calendar-cell--selected'; }
+        cell.setAttribute('aria-label', dateStr + ' 글 ' + posts.length + '개');
+        cell.addEventListener('click', function(targetDateStr) {
+          return function() {
+            renderResults(targetDateStr);
+            renderCalendar();
+            results.scrollIntoView({ block: 'nearest' });
+          };
+        }(dateStr));
+
+        var num = document.createElement('span');
+        num.className = 'archive-calendar-daynum';
+        num.textContent = d;
+        cell.appendChild(num);
+
+        var flakes = document.createElement('span');
+        flakes.className = 'archive-calendar-flakes';
+        flakes.textContent = '❄'.repeat(Math.min(posts.length, 3));
+        cell.appendChild(flakes);
+
+        if (posts.length > 3) {
+          var badge = document.createElement('span');
+          badge.className = 'archive-calendar-badge';
+          badge.textContent = posts.length;
+          cell.appendChild(badge);
+        }
+      } else {
+        cell = document.createElement('span');
+        cell.className = 'archive-calendar-cell';
+        cell.textContent = d;
+      }
+
+      grid.appendChild(cell);
+    }
+  }
+
+  calendar.querySelectorAll('.archive-calendar-nav').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      viewMonth += parseInt(btn.getAttribute('data-dir'), 10);
+      if (viewMonth < 0) { viewMonth = 11; viewYear--; }
+      if (viewMonth > 11) { viewMonth = 0; viewYear++; }
+      renderCalendar();
+    });
+  });
+
+  document.addEventListener('click', function(e) {
+    var link = e.target.closest && e.target.closest('.js-date-jump');
+    if (!link) { return; }
+    var id = link.getAttribute('data-date-target') || '';
+    var dateStr = id.indexOf('date-') === 0 ? id.slice(5) : null;
+    if (!dateStr || !byDate[dateStr]) { return; }
+    viewYear = parseInt(dateStr.slice(0, 4), 10);
+    viewMonth = parseInt(dateStr.slice(5, 7), 10) - 1;
+    renderResults(dateStr);
+    renderCalendar();
+  });
+
+  renderResults(selectedDate);
+  renderCalendar();
+})();
+</script>
