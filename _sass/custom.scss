@@ -180,6 +180,10 @@ body::after {
   box-shadow: 0 14px 30px rgba(10, 26, 51, .3);
   overflow: hidden;
 }
+.header__category-dropdown:has(.header__calendar) {
+  min-width: 280px;
+  overflow: visible;
+}
 .header__category-menu:hover .header__category-dropdown,
 .header__category-toggle:focus-visible ~ .header__category-dropdown {
   display: block;
@@ -209,6 +213,97 @@ body::after {
   margin: .3rem 0;
   border: none;
   border-top: 1px solid var(--frost-ice);
+}
+
+/* ---- calendar: month grid in the dropdown, snowflakes mark days with posts ---- */
+.header__calendar {
+  padding: .6rem .7rem .7rem;
+}
+.header__calendar-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: .4rem;
+}
+.header__calendar-title {
+  font-size: .85rem;
+  font-weight: 700;
+  color: var(--frost-navy);
+}
+.header__calendar-nav {
+  border: none;
+  background: transparent;
+  color: var(--frost-blue);
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: .1rem .4rem;
+  border-radius: .3rem;
+}
+.header__calendar-nav:hover {
+  background: rgba(79, 195, 247, .12);
+}
+.header__calendar-weekdays,
+.header__calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+.header__calendar-weekdays {
+  margin-bottom: .2rem;
+}
+.header__calendar-weekdays span {
+  text-align: center;
+  font-size: .68rem;
+  color: var(--frost-navy);
+  opacity: .55;
+}
+.header__calendar-cell {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1;
+  border-radius: .35rem;
+  font-size: .72rem;
+  color: var(--frost-navy);
+  text-decoration: none;
+}
+.header__calendar-cell--pad {
+  visibility: hidden;
+}
+.header__calendar-daynum {
+  line-height: 1.1;
+}
+.header__calendar-cell--has-posts {
+  background: var(--frost-main-soft, rgba(79, 195, 247, .1));
+  font-weight: 700;
+  cursor: pointer;
+}
+.header__calendar-cell--has-posts:hover {
+  background: rgba(79, 195, 247, .25);
+}
+.header__calendar-flakes {
+  font-size: .6rem;
+  line-height: 1;
+  color: var(--frost-blue);
+  letter-spacing: -1px;
+}
+.header__calendar-badge {
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  min-width: 13px;
+  height: 13px;
+  padding: 0 2px;
+  border-radius: 999px;
+  background: var(--frost-lilac);
+  color: #fff;
+  font-size: .55rem;
+  font-weight: 700;
+  line-height: 13px;
+  text-align: center;
 }
 
 /* ---- date-anchor jump target: keep the linked row clear of the header on landing ---- */
