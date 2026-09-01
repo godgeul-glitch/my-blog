@@ -215,6 +215,97 @@ body::after {
   border-top: 1px solid var(--frost-ice);
 }
 
+/* ---- header calendar: compact month grid in the hamburger dropdown ---- */
+.header__calendar {
+  padding: .6rem .7rem .7rem;
+}
+.header__calendar-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: .4rem;
+}
+.header__calendar-title {
+  font-size: .85rem;
+  font-weight: 700;
+  color: var(--frost-navy);
+}
+.header__calendar-nav {
+  border: none;
+  background: transparent;
+  color: var(--frost-blue);
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: .1rem .4rem;
+  border-radius: .3rem;
+}
+.header__calendar-nav:hover {
+  background: rgba(79, 195, 247, .12);
+}
+.header__calendar-weekdays,
+.header__calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+.header__calendar-weekdays {
+  margin-bottom: .2rem;
+}
+.header__calendar-weekdays span {
+  text-align: center;
+  font-size: .68rem;
+  color: var(--frost-navy);
+  opacity: .55;
+}
+.header__calendar-cell {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1;
+  border-radius: .35rem;
+  font-size: .72rem;
+  color: var(--frost-navy);
+  text-decoration: none;
+}
+.header__calendar-cell--pad {
+  visibility: hidden;
+}
+.header__calendar-daynum {
+  line-height: 1.1;
+}
+.header__calendar-cell--has-posts {
+  background: rgba(79, 195, 247, .1);
+  font-weight: 700;
+  cursor: pointer;
+}
+.header__calendar-cell--has-posts:hover {
+  background: rgba(79, 195, 247, .25);
+}
+.header__calendar-flakes {
+  font-size: .6rem;
+  line-height: 1;
+  color: var(--frost-blue);
+  letter-spacing: -1px;
+}
+.header__calendar-badge {
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  min-width: 13px;
+  height: 13px;
+  padding: 0 2px;
+  border-radius: 999px;
+  background: var(--frost-lilac);
+  color: #fff;
+  font-size: .55rem;
+  font-weight: 700;
+  line-height: 13px;
+  text-align: center;
+}
+
 /* ---- archive calendar: month grid on the home page, snowflakes mark days with posts ---- */
 .archive-calendar {
   max-width: 420px;
