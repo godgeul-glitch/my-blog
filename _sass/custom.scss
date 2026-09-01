@@ -180,6 +180,10 @@ body::after {
   box-shadow: 0 14px 30px rgba(10, 26, 51, .3);
   overflow: hidden;
 }
+.header__category-dropdown:has(.header__calendar) {
+  min-width: 280px;
+  overflow: visible;
+}
 .header__category-menu:hover .header__category-dropdown,
 .header__category-toggle:focus-visible ~ .header__category-dropdown {
   display: block;
