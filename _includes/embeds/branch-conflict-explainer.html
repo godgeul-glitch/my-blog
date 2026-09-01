@@ -1,0 +1,343 @@
+<div class="branch-conflict-explainer">
+<style>
+  .branch-conflict-explainer{
+    --bce-bg:#FBF7F0;
+    --bce-surface:#FFFFFF;
+    --bce-surface-2:#F3EEE3;
+    --bce-ink:#262421;
+    --bce-ink-soft:#726B5C;
+    --bce-line:#E6DFD2;
+    --bce-main:#2F6690;
+    --bce-main-soft:#DCEAF3;
+    --bce-feature:#C6590E;
+    --bce-feature-soft:#FBE6D4;
+    --bce-conflict:#C23A3A;
+    --bce-conflict-soft:#FBDEDE;
+    --bce-resolve:#2E7D40;
+    --bce-resolve-soft:#DEEEE0;
+    --bce-shadow:0 1px 2px rgba(38,36,33,.06), 0 10px 28px rgba(38,36,33,.07);
+  }
+  @media (prefers-color-scheme: dark){
+    .branch-conflict-explainer{
+      --bce-bg:#1C1A17;
+      --bce-surface:#252220;
+      --bce-surface-2:#2E2A26;
+      --bce-ink:#F3EFE7;
+      --bce-ink-soft:#B8AF9E;
+      --bce-line:#3A362F;
+      --bce-main:#7FB4DA;
+      --bce-main-soft:#22384A;
+      --bce-feature:#F0985A;
+      --bce-feature-soft:#46301D;
+      --bce-conflict:#F27272;
+      --bce-conflict-soft:#472323;
+      --bce-resolve:#7ED18F;
+      --bce-resolve-soft:#203A28;
+      --bce-shadow:0 1px 2px rgba(0,0,0,.35), 0 10px 28px rgba(0,0,0,.4);
+    }
+  }
+
+  .branch-conflict-explainer{
+    background:var(--bce-bg);
+    color:var(--bce-ink);
+    font-family:'Noto Sans KR', system-ui, sans-serif;
+    -webkit-font-smoothing:antialiased;
+    border-radius:18px;
+    padding:clamp(1rem,3vw,2rem) 0;
+  }
+  .branch-conflict-explainer *{ box-sizing:border-box; }
+  .branch-conflict-explainer h1, .branch-conflict-explainer h2{ text-wrap:balance; }
+
+  .branch-conflict-explainer .page{ max-width:720px; margin:0 auto; padding:clamp(1.5rem,5vw,3.5rem) clamp(1rem,4vw,1.5rem) 2rem; }
+
+  .branch-conflict-explainer .hero{ text-align:center; margin-bottom:2.5rem; }
+  .branch-conflict-explainer .hero .kicker{
+    font-family:'JetBrains Mono', monospace;
+    font-size:.78rem; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--bce-ink-soft); margin:0 0 .75rem;
+  }
+  .branch-conflict-explainer .hero h1{
+    font-family:'Gaegu','Noto Sans KR',sans-serif; font-weight:700;
+    font-size:clamp(2rem,4.5vw + 1rem,3rem);
+    line-height:1.25; margin:0 0 .75rem;
+  }
+  .branch-conflict-explainer .hero p{
+    font-size:1.05rem; color:var(--bce-ink-soft); max-width:52ch; margin:0 auto 1.25rem;
+    line-height:1.6;
+  }
+  .branch-conflict-explainer .legend{ display:flex; justify-content:center; gap:1.25rem; flex-wrap:wrap; }
+  .branch-conflict-explainer .legend span{
+    display:inline-flex; align-items:center; gap:.4rem;
+    font-family:'JetBrains Mono', monospace; font-size:.85rem; color:var(--bce-ink-soft);
+  }
+  .branch-conflict-explainer .legend i{ width:10px; height:10px; border-radius:50%; display:inline-block; }
+  .branch-conflict-explainer .legend .m i{ background:var(--bce-main); }
+  .branch-conflict-explainer .legend .f i{ background:var(--bce-feature); }
+
+  .branch-conflict-explainer .scene{
+    background:var(--bce-surface);
+    border:1px solid var(--bce-line);
+    border-radius:18px;
+    padding:clamp(1.25rem,3vw,2rem);
+    margin-bottom:1.75rem;
+    box-shadow:var(--bce-shadow);
+    transition:opacity .6s ease, transform .6s ease;
+  }
+  .branch-conflict-explainer .scene.pre-reveal{ opacity:0; transform:translateY(18px); }
+
+  .branch-conflict-explainer .eyebrow{
+    display:flex; align-items:center; gap:.55rem;
+    font-family:'JetBrains Mono', monospace; font-size:.75rem;
+    letter-spacing:.1em; text-transform:uppercase; color:var(--bce-ink-soft);
+    margin-bottom:.9rem;
+  }
+  .branch-conflict-explainer .eyebrow .dot{ width:9px; height:9px; border-radius:50%; flex:none; }
+
+  .branch-conflict-explainer .scene h2{
+    font-family:'Gaegu','Noto Sans KR',sans-serif; font-weight:700;
+    font-size:clamp(1.35rem,2.5vw + .8rem,1.85rem);
+    margin:0 0 .6rem;
+  }
+  .branch-conflict-explainer .scene p.caption{
+    font-size:1.02rem; line-height:1.7; margin:0 0 1.1rem; max-width:60ch;
+  }
+  .branch-conflict-explainer .scene svg{ display:block; width:100%; max-width:420px; height:auto; margin:0 auto .25rem; }
+
+  .branch-conflict-explainer .code-row{
+    display:flex; gap:.9rem; flex-wrap:wrap; justify-content:center; align-items:center;
+    margin-top:.5rem;
+  }
+  .branch-conflict-explainer .code-card{
+    background:var(--bce-surface-2);
+    border-radius:10px;
+    padding:.7rem .9rem;
+    min-width:170px;
+    max-width:100%;
+    overflow-x:auto;
+    font-family:'JetBrains Mono', monospace;
+    font-size:.85rem;
+    line-height:1.6;
+  }
+  .branch-conflict-explainer .code-card .label{
+    font-family:'Noto Sans KR', sans-serif; font-weight:700; font-size:.78rem;
+    margin-bottom:.35rem; display:block;
+  }
+  .branch-conflict-explainer .code-card.m{ box-shadow: inset 3px 0 0 var(--bce-main); }
+  .branch-conflict-explainer .code-card.m .label{ color:var(--bce-main); }
+  .branch-conflict-explainer .code-card.f{ box-shadow: inset 3px 0 0 var(--bce-feature); }
+  .branch-conflict-explainer .code-card.f .label{ color:var(--bce-feature); }
+  .branch-conflict-explainer .code-card.c{ box-shadow: inset 3px 0 0 var(--bce-conflict); }
+  .branch-conflict-explainer .code-card.c .label{ color:var(--bce-conflict); }
+  .branch-conflict-explainer .code-card.r{ box-shadow: inset 3px 0 0 var(--bce-resolve); }
+  .branch-conflict-explainer .code-card.r .label{ color:var(--bce-resolve); }
+  .branch-conflict-explainer .code-card pre{ margin:0; white-space:pre; }
+
+  .branch-conflict-explainer .arrow{
+    font-size:1.6rem; color:var(--bce-ink-soft); flex:none; line-height:1;
+  }
+
+  .branch-conflict-explainer .term{
+    font-family:'JetBrains Mono', monospace; font-size:.85rem;
+    background:var(--bce-surface-2); border-radius:10px; padding:.7rem .9rem;
+    overflow-x:auto; margin-top:.9rem;
+  }
+  .branch-conflict-explainer .term div{ white-space:pre; }
+  .branch-conflict-explainer .term .cmd::before{ content:"$ "; color:var(--bce-ink-soft); }
+
+  .branch-conflict-explainer .recap{
+    background:var(--bce-surface-2);
+    border-radius:18px;
+    padding:clamp(1.25rem,3vw,2rem);
+    border:1px solid var(--bce-line);
+  }
+  .branch-conflict-explainer .recap h2{
+    font-family:'Gaegu','Noto Sans KR',sans-serif; font-weight:700;
+    font-size:clamp(1.35rem,2.5vw + .8rem,1.7rem); margin:0 0 1rem;
+  }
+  .branch-conflict-explainer .recap ol{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:.9rem; }
+  .branch-conflict-explainer .recap li{ display:flex; align-items:baseline; gap:.9rem; flex-wrap:wrap; }
+  .branch-conflict-explainer .recap code{
+    font-family:'JetBrains Mono', monospace; font-size:.9rem;
+    background:var(--bce-surface); border:1px solid var(--bce-line);
+    border-radius:8px; padding:.25rem .55rem; flex:none;
+  }
+  .branch-conflict-explainer .recap span{ color:var(--bce-ink-soft); font-size:.95rem; }
+
+  @media (prefers-reduced-motion: reduce){
+    .branch-conflict-explainer .scene, .branch-conflict-explainer .scene.pre-reveal{ transition:none; opacity:1; transform:none; }
+  }
+</style>
+
+<div class="page">
+
+  <header class="hero">
+    <p class="kicker">GITHUB · 5분 설명서</p>
+    <h1>브랜치가 부딪히면<br>무슨 일이 일어날까?</h1>
+    <p>그림 6장으로 '충돌(conflict)'을 처음부터 끝까지 따라가 봐요.</p>
+    <div class="legend">
+      <span class="m"><i></i> main 브랜치</span>
+      <span class="f"><i></i> feature 브랜치</span>
+    </div>
+  </header>
+
+  <main>
+
+    <section class="scene">
+      <p class="eyebrow"><span class="dot" style="background:var(--bce-main)"></span>STEP 01 · 시작</p>
+      <svg viewBox="0 0 380 140" role="img" aria-label="하나의 선을 따라 커밋 점들이 나란히 이어져 있다">
+        <line x1="30" y1="70" x2="350" y2="70" stroke="var(--bce-main)" stroke-width="5" stroke-linecap="round"/>
+        <circle cx="30" cy="70" r="10" fill="var(--bce-main)" stroke="var(--bce-surface)" stroke-width="4"/>
+        <circle cx="110" cy="70" r="10" fill="var(--bce-main)" stroke="var(--bce-surface)" stroke-width="4"/>
+        <circle cx="190" cy="70" r="10" fill="var(--bce-main)" stroke="var(--bce-surface)" stroke-width="4"/>
+        <circle cx="270" cy="70" r="10" fill="var(--bce-main)" stroke="var(--bce-surface)" stroke-width="4"/>
+        <circle cx="350" cy="70" r="10" fill="var(--bce-main)" stroke="var(--bce-surface)" stroke-width="4"/>
+        <text x="30" y="42" font-family="JetBrains Mono, monospace" font-size="14" fill="var(--bce-main)">main</text>
+      </svg>
+      <h2>모두 같은 길을 걷고 있어요</h2>
+      <p class="caption">처음엔 나도, 동료도 같은 코드(<code style="font-family:'JetBrains Mono',monospace">main</code>)를 보고 있어요.</p>
+    </section>
+
+    <section class="scene">
+      <p class="eyebrow"><span class="dot" style="background:var(--bce-feature)"></span>STEP 02 · 갈라짐</p>
+      <svg viewBox="0 0 380 170" role="img" aria-label="하나의 선에서 두 개의 선이 갈라져 나온다">
+        <line x1="20" y1="95" x2="110" y2="95" stroke="var(--bce-main)" stroke-width="5" stroke-linecap="round"/>
+        <line x1="110" y1="95" x2="190" y2="55" stroke="var(--bce-main)" stroke-width="5" stroke-linecap="round"/>
+        <line x1="190" y1="55" x2="350" y2="55" stroke="var(--bce-main)" stroke-width="5" stroke-linecap="round"/>
+        <line x1="110" y1="95" x2="190" y2="135" stroke="var(--bce-feature)" stroke-width="5" stroke-linecap="round"/>
+        <line x1="190" y1="135" x2="350" y2="135" stroke="var(--bce-feature)" stroke-width="5" stroke-linecap="round"/>
+        <circle cx="20" cy="95" r="10" fill="var(--bce-main)" stroke="var(--bce-surface)" stroke-width="4"/>
+        <circle cx="110" cy="95" r="10" fill="var(--bce-main)" stroke="var(--bce-surface)" stroke-width="4"/>
+        <circle cx="190" cy="55" r="10" fill="var(--bce-main)" stroke="var(--bce-surface)" stroke-width="4"/>
+        <circle cx="270" cy="55" r="10" fill="var(--bce-main)" stroke="var(--bce-surface)" stroke-width="4"/>
+        <circle cx="350" cy="55" r="10" fill="var(--bce-main)" stroke="var(--bce-surface)" stroke-width="4"/>
+        <circle cx="190" cy="135" r="10" fill="var(--bce-feature)" stroke="var(--bce-surface)" stroke-width="4"/>
+        <circle cx="270" cy="135" r="10" fill="var(--bce-feature)" stroke="var(--bce-surface)" stroke-width="4"/>
+        <circle cx="350" cy="135" r="10" fill="var(--bce-feature)" stroke="var(--bce-surface)" stroke-width="4"/>
+        <text x="345" y="38" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="14" fill="var(--bce-main)">main</text>
+        <text x="345" y="158" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="14" fill="var(--bce-feature)">feature</text>
+      </svg>
+      <h2>나는 다른 길로 갈라져요</h2>
+      <p class="caption">새 기능을 만들려고 <code style="font-family:'JetBrains Mono',monospace">feature</code> 브랜치를 따로 파요. 이제 두 갈래 길이 생겼어요.</p>
+    </section>
+
+    <section class="scene">
+      <p class="eyebrow"><span class="dot" style="background:var(--bce-feature)"></span>STEP 03 · 같은 곳을 수정</p>
+      <div class="code-row">
+        <div class="code-card m">
+          <span class="label">main · style.css</span>
+          <pre>color: blue;</pre>
+        </div>
+        <div class="code-card f">
+          <span class="label">feature · style.css</span>
+          <pre>color: orange;</pre>
+        </div>
+      </div>
+      <h2 style="margin-top:1.1rem">같은 줄을, 다르게 고쳤어요</h2>
+      <p class="caption">나와 동료가 같은 파일, 같은 줄을 서로 다른 값으로 바꿔버렸어요. Git은 아직 이 사실을 몰라요.</p>
+    </section>
+
+    <section class="scene">
+      <p class="eyebrow"><span class="dot" style="background:var(--bce-conflict)"></span>STEP 04 · 충돌 발생</p>
+      <svg viewBox="0 0 380 170" role="img" aria-label="두 선이 합쳐지려다 붉은 원과 부딪힌다">
+        <line x1="20" y1="55" x2="230" y2="90" stroke="var(--bce-main)" stroke-width="5" stroke-linecap="round"/>
+        <line x1="20" y1="135" x2="230" y2="90" stroke="var(--bce-feature)" stroke-width="5" stroke-linecap="round"/>
+        <circle cx="20" cy="55" r="10" fill="var(--bce-main)" stroke="var(--bce-surface)" stroke-width="4"/>
+        <circle cx="20" cy="135" r="10" fill="var(--bce-feature)" stroke="var(--bce-surface)" stroke-width="4"/>
+        <line x1="241.3" y1="78.7" x2="248.4" y2="71.6" stroke="var(--bce-conflict)" stroke-width="3" stroke-linecap="round"/>
+        <line x1="218.7" y1="78.7" x2="211.6" y2="71.6" stroke="var(--bce-conflict)" stroke-width="3" stroke-linecap="round"/>
+        <line x1="241.3" y1="101.3" x2="248.4" y2="108.4" stroke="var(--bce-conflict)" stroke-width="3" stroke-linecap="round"/>
+        <line x1="218.7" y1="101.3" x2="211.6" y2="108.4" stroke="var(--bce-conflict)" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="230" cy="90" r="16" fill="var(--bce-conflict)"/>
+        <text x="230" y="96" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700" font-size="18" fill="#fff">!</text>
+        <text x="20" y="40" font-family="JetBrains Mono, monospace" font-size="14" fill="var(--bce-main)">main</text>
+        <text x="20" y="158" font-family="JetBrains Mono, monospace" font-size="14" fill="var(--bce-feature)">feature</text>
+      </svg>
+      <h2>합치려다 그대로 부딪혔어요</h2>
+      <p class="caption">두 길을 하나로 합치려는 순간, Git이 멈춰요. "어느 쪽을 남겨야 할지 나는 몰라요" — 이게 바로 <strong>충돌(conflict)</strong>이에요.</p>
+      <div class="code-card c" style="margin:0 auto;max-width:260px">
+        <span class="label">style.css</span>
+        <pre>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+color: blue;
+=======
+color: orange;
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; feature</pre>
+      </div>
+    </section>
+
+    <section class="scene">
+      <p class="eyebrow"><span class="dot" style="background:var(--bce-resolve)"></span>STEP 05 · 직접 정리</p>
+      <div class="code-row">
+        <div class="code-card c">
+          <span class="label">정리 전</span>
+          <pre>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+color: blue;
+=======
+color: orange;
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; feature</pre>
+        </div>
+        <span class="arrow" aria-hidden="true">→</span>
+        <div class="code-card r">
+          <span class="label">정리 후</span>
+          <pre>color: blue;</pre>
+        </div>
+      </div>
+      <h2 style="margin-top:1.1rem">내가 직접 골라줘요</h2>
+      <p class="caption">표시선(<code style="font-family:'JetBrains Mono',monospace">&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code>, <code style="font-family:'JetBrains Mono',monospace">=======</code>, <code style="font-family:'JetBrains Mono',monospace">&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code>)를 지우고, 남길 코드 한 줄만 남겨요.</p>
+    </section>
+
+    <section class="scene">
+      <p class="eyebrow"><span class="dot" style="background:var(--bce-resolve)"></span>STEP 06 · 완료</p>
+      <svg viewBox="0 0 380 170" role="img" aria-label="두 선이 초록 원에서 만나 다시 하나의 선으로 이어진다">
+        <line x1="20" y1="55" x2="80" y2="90" stroke="var(--bce-main)" stroke-width="5" stroke-linecap="round" opacity="0.55"/>
+        <line x1="20" y1="135" x2="80" y2="90" stroke="var(--bce-feature)" stroke-width="5" stroke-linecap="round" opacity="0.55"/>
+        <line x1="80" y1="90" x2="350" y2="90" stroke="var(--bce-resolve)" stroke-width="5" stroke-linecap="round"/>
+        <circle cx="200" cy="90" r="10" fill="var(--bce-resolve)" stroke="var(--bce-surface)" stroke-width="4"/>
+        <circle cx="350" cy="90" r="10" fill="var(--bce-resolve)" stroke="var(--bce-surface)" stroke-width="4"/>
+        <circle cx="80" cy="90" r="15" fill="var(--bce-resolve)"/>
+        <text x="80" y="96" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700" font-size="16" fill="#fff">✓</text>
+        <text x="345" y="75" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="14" fill="var(--bce-resolve)">merged</text>
+      </svg>
+      <h2>다시 하나의 길이 됐어요</h2>
+      <p class="caption">Git에게 "다 골랐어"라고 알려주면 끝이에요. 두 길이 다시 하나로 이어져요.</p>
+      <div class="term">
+        <div class="cmd">git add style.css</div>
+        <div class="cmd">git commit</div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="recap">
+    <h2>기억할 3가지</h2>
+    <ol>
+      <li><code>git status</code><span>지금 어떤 파일이 충돌 중인지 확인해요.</span></li>
+      <li><code>git add &lt;파일명&gt;</code><span>내가 직접 정리했다고 알려줘요.</span></li>
+      <li><code>git commit</code><span>정리한 내용으로 합치기를 마무리해요.</span></li>
+    </ol>
+  </footer>
+
+</div>
+
+<script>
+  (function(){
+    var root = document.currentScript.closest('.branch-conflict-explainer');
+    if (!root) return;
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce || !('IntersectionObserver' in window)) {
+      root.querySelectorAll('.scene').forEach(function(s){ s.classList.remove('pre-reveal'); });
+      return;
+    }
+    var scenes = root.querySelectorAll('.scene');
+    scenes.forEach(function(s){ s.classList.add('pre-reveal'); });
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (entry.isIntersecting){
+          entry.target.classList.remove('pre-reveal');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    scenes.forEach(function(s){ io.observe(s); });
+  })();
+</script>
+</div>
