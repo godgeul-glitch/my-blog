@@ -510,8 +510,12 @@ body::after {
   gap: .75rem;
   padding: .65rem 1rem;
   text-decoration: none;
-  color: var(--frost-navy);
   border-bottom: 1px solid rgba(79, 195, 247, .12);
+}
+.header .header__search-result-item,
+.header .header__search-result-item:link,
+.header .header__search-result-item:visited {
+  color: var(--frost-navy);
 }
 .header__search-result-item:last-child {
   border-bottom: none;
@@ -527,6 +531,7 @@ body::after {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  color: inherit;
 }
 
 .header__search-result-date {
