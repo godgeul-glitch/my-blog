@@ -14,15 +14,6 @@
             <span></span><span></span><span></span>
           </button>
           <div class="header__category-dropdown">
-            {%- if site.categories.size > 0 -%}
-            <ul class="header__category-dropdown-categories">
-              {%- for _category in site.categories -%}
-                {%- assign _cat_post = _category[1].first -%}
-                <li><a href="{{ _cat_post.url | relative_url }}{% if _cat_post.highlight_anchor %}#{{ _cat_post.highlight_anchor }}{% endif %}">{{ _category[0] }}</a></li>
-              {%- endfor -%}
-            </ul>
-            <hr class="header__category-dropdown-divider">
-            {%- endif -%}
             <ul>
               {%- for _group in _date_groups -%}
                 {%- assign _sample = _group.items.first -%}
@@ -63,6 +54,12 @@
               <li class="navigation__item navigation__item--active"><a href="{{ _nav_url }}">{%- if _item.title -%}{{ _item.title }}{%- else -%}{{ __return }}{%- endif -%}</a></li>
             {%- else -%}
               <li class="navigation__item"><a href="{{ _nav_url }}">{%- if _item.title -%}{{ _item.title }}{%- else -%}{{ __return }}{%- endif -%}</a></li>
+            {%- endif -%}
+            {%- if forloop.index == 1 -%}
+              {%- for _category in site.categories -%}
+                {%- assign _cat_post = _category[1].first -%}
+                <li class="navigation__item"><a href="{{ _cat_post.url | relative_url }}{% if _cat_post.highlight_anchor %}#{{ _cat_post.highlight_anchor }}{% endif %}">{{ _category[0] }}</a></li>
+              {%- endfor -%}
             {%- endif -%}
           {%- endfor -%}
           {%- if site.search.provider -%}
