@@ -17,7 +17,8 @@
             {%- if site.categories.size > 0 -%}
             <ul class="header__category-dropdown-categories">
               {%- for _category in site.categories -%}
-                <li><a href="{{ '/' | relative_url }}#posts">{{ _category[0] }}</a></li>
+                {%- assign _cat_post = _category[1].first -%}
+                <li><a href="{{ _cat_post.url | relative_url }}{% if _cat_post.highlight_anchor %}#{{ _cat_post.highlight_anchor }}{% endif %}">{{ _category[0] }}</a></li>
               {%- endfor -%}
             </ul>
             <hr class="header__category-dropdown-divider">
@@ -204,7 +205,7 @@
     });
   });
 
-  if (location.hash.indexOf('#date-') === 0) {
+  if (location.hash.length > 1) {
     window.addEventListener('load', function() {
       jumpTo(location.hash.slice(1));
     });
