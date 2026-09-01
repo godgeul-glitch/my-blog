@@ -515,7 +515,7 @@ body::after {
 .header .header__search-result-item,
 .header .header__search-result-item:link,
 .header .header__search-result-item:visited {
-  color: var(--frost-navy);
+  color: var(--frost-navy) !important;
 }
 .header__search-result-item:last-child {
   border-bottom: none;
