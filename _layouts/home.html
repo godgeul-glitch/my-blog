@@ -19,15 +19,15 @@ show_title: false
   {%- comment -%}
     Snowball fight in the hero's bottom third. Purely decorative, sits behind
     .hero-frozen__inner (z-index 1) so the text always wins.
-    Each character only renders if its asset has actually been added.
   {%- endcomment -%}
-  {%- assign _sf_girl = site.static_files | where_exp: "f", "f.path contains '/assets/images/hero-girl'" -%}
-  {%- assign _sf_boy = site.static_files | where_exp: "f", "f.path contains '/assets/images/hero-boy'" -%}
-  {%- if _sf_girl.size > 0 and _sf_boy.size > 0 -%}
   <div class="snowfight" aria-hidden="true">
     <div class="snowfight__stage">
-      <img class="snowfight__char snowfight__char--left" src="{{ _sf_girl.first.path | relative_url }}" alt="" loading="lazy" decoding="async">
-      <img class="snowfight__char snowfight__char--right" src="{{ _sf_boy.first.path | relative_url }}" alt="" loading="lazy" decoding="async">
+      <div class="snowfight__char snowfight__char--left">
+        {%- include svg/snowfight-kid.svg variant="girl" -%}
+      </div>
+      <div class="snowfight__char snowfight__char--right">
+        {%- include svg/snowfight-kid.svg variant="boy" -%}
+      </div>
       <div class="snowfight__track snowfight__track--rightward">
         <div class="snowfight__carrier"><span class="snowfight__ball"></span></div>
       </div>
@@ -36,7 +36,6 @@ show_title: false
       </div>
     </div>
   </div>
-  {%- endif -%}
 </div>
 
 <section id="about" class="frozen-section frozen-section--about">

@@ -1,0 +1,102 @@
+{%- comment -%}
+  Snowball-fight kid, drawn to match the blog's winter illustrations.
+  Faces right; the caller mirrors it for the character on the right side.
+
+  Every animated part is a <g> whose pivot is given in viewBox units, and the
+  matching CSS sets transform-origin to that exact point:
+    .sf-torso    61 204   (hips)
+    .sf-head     61  88   (neck)
+    .sf-arm      74 112   (throwing shoulder)
+    .sf-forearm  74 146   (elbow)
+    .sf-arm-back 48 112   (far shoulder)
+
+  Params: variant = "girl" (fur hood) | "boy" (beanie)
+{%- endcomment -%}
+<svg class="sf-figure sf-figure--{{ include.variant }}" viewBox="0 0 120 300" role="img" aria-hidden="true" focusable="false">
+  <!-- soft shadow on the snow -->
+  <ellipse class="sf-shadow" cx="61" cy="288" rx="30" ry="5"/>
+
+  <!-- far arm, behind the coat -->
+  <g class="sf-arm-back">
+    <path class="sf-sleeve" d="M41 112 q-7 20 -3 44 q7 4 12 0 q2 -24 4 -44 z"/>
+    <circle class="sf-mitten" cx="49" cy="160" r="7"/>
+  </g>
+
+  <!-- legs -->
+  <g class="sf-legs">
+    <g class="sf-leg sf-leg--back">
+      <path class="sf-pants" d="M48 196 q-3 30 0 60 q7 3 13 0 q2 -30 1 -60 z"/>
+      <path class="sf-boot" d="M46 252 q-2 14 0 20 q0 4 5 4 h16 q4 0 4 -4 q0 -5 -6 -7 q-5 -2 -6 -13 z"/>
+    </g>
+    <g class="sf-leg sf-leg--front">
+      <path class="sf-pants" d="M64 196 q-2 30 1 60 q7 3 13 0 q2 -30 -1 -60 z"/>
+      <path class="sf-boot" d="M62 252 q-2 14 0 20 q0 4 5 4 h16 q4 0 4 -4 q0 -5 -6 -7 q-5 -2 -6 -13 z"/>
+    </g>
+  </g>
+
+  <!-- torso: coat + backpack, leans from the hips -->
+  <g class="sf-torso">
+    <!-- backpack sits on the back (left, since we face right) -->
+    <g class="sf-pack">
+      <path class="sf-pack-body" d="M30 118 q-6 26 -1 50 q10 5 18 1 q3 -26 0 -52 q-9 -3 -17 1 z"/>
+      <path class="sf-pack-pocket" d="M33 146 q-2 12 0 20 q7 3 12 0 q2 -10 0 -20 q-6 -2 -12 0 z"/>
+      <circle class="sf-pack-charm" cx="47" cy="150" r="4"/>
+    </g>
+
+    <!-- puffer coat -->
+    <path class="sf-coat" d="M43 100 q-9 28 -8 58 q0 26 2 48 q13 6 24 6 q11 0 24 -6 q2 -22 2 -48 q1 -30 -8 -58 q-18 -7 -36 0 z"/>
+    <!-- quilting -->
+    <g class="sf-quilt">
+      <path d="M36 130 q25 6 50 0"/>
+      <path d="M35 152 q26 6 52 0"/>
+      <path d="M35 174 q26 6 52 0"/>
+      <path d="M36 196 q25 6 50 0"/>
+    </g>
+    <!-- coat opening / zip on the front side -->
+    <path class="sf-zip" d="M79 104 q4 30 3 58 q0 24 -2 44"/>
+    <!-- chest pocket -->
+    <path class="sf-pocket" d="M60 132 q10 -3 16 0 q1 8 0 12 q-8 3 -16 0 z"/>
+
+    <!-- head -->
+    <g class="sf-head">
+      <!-- hair behind the face -->
+      <path class="sf-hair" d="M44 62 q-2 -26 18 -28 q20 -2 21 24 q1 14 -2 22 q-18 8 -35 0 q-2 -8 -2 -18 z"/>
+      <!-- face -->
+      <path class="sf-face" d="M50 52 q13 -6 25 1 q3 16 -1 26 q-6 8 -14 7 q-9 -1 -12 -10 q-2 -12 2 -24 z"/>
+      <!-- cheek + features -->
+      <circle class="sf-cheek" cx="72" cy="70" r="5"/>
+      <circle class="sf-eye" cx="70" cy="61" r="2.1"/>
+      <circle class="sf-eye" cx="59" cy="62" r="2.1"/>
+      <path class="sf-smile" d="M65 74 q5 3 9 -1"/>
+
+      {%- if include.variant == 'boy' -%}
+        <!-- beanie -->
+        <path class="sf-hat" d="M43 46 q3 -24 21 -25 q19 -1 21 23 q-21 7 -42 2 z"/>
+        <path class="sf-hat-brim" d="M42 44 q21 8 43 2 q1 7 -1 9 q-21 6 -41 -1 q-2 -3 -1 -10 z"/>
+        <rect class="sf-hat-tag" x="74" y="34" width="9" height="7" rx="2"/>
+      {%- else -%}
+        <!-- fur-trimmed hood: hood shell behind, fluffy ring in front -->
+        <path class="sf-hood" d="M40 60 q-4 -34 22 -36 q26 -2 26 32 q0 16 -6 26 q-8 -22 -20 -24 q-14 -2 -22 2 z"/>
+        <g class="sf-fur">
+          <circle cx="44" cy="40" r="9"/><circle cx="54" cy="31" r="9.5"/>
+          <circle cx="66" cy="28" r="9.5"/><circle cx="77" cy="33" r="9"/>
+          <circle cx="84" cy="44" r="8.5"/><circle cx="86" cy="56" r="8"/>
+          <circle cx="41" cy="52" r="8.5"/><circle cx="41" cy="64" r="8"/>
+        </g>
+        <!-- long hair falling past the hood on the back side -->
+        <path class="sf-hair-long" d="M41 62 q-6 22 -2 38 q8 4 14 1 q-6 -20 -3 -39 z"/>
+      {%- endif -%}
+    </g>
+
+    <!-- throwing arm, in front of the coat -->
+    <g class="sf-arm">
+      <path class="sf-sleeve" d="M67 112 q-4 18 -1 36 q8 4 15 0 q2 -18 4 -36 q-9 -4 -18 0 z"/>
+      <g class="sf-forearm">
+        <path class="sf-sleeve" d="M68 146 q-3 16 -1 30 q8 4 14 0 q1 -16 2 -30 q-8 -3 -15 0 z"/>
+        <circle class="sf-mitten" cx="75" cy="180" r="7.5"/>
+        <!-- the snowball being held; hidden the moment it is released -->
+        <circle class="sf-held" cx="79" cy="186" r="6.5"/>
+      </g>
+    </g>
+  </g>
+</svg>

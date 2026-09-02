@@ -702,29 +702,35 @@ html {
 }
 
 /* ---- hero snowball fight ----------------------------------------------------
-   Two characters stand in the bottom third of the hero and lob one snowball at
-   a time along a parabola. The whole layer is z-index 0 / pointer-events none,
-   so the hero text (z-index 1) always sits on top and stays clickable.
+   Two characters stand at the far edges of the hero's bottom third and lob one
+   snowball at a time on a high arc that reaches up to the title.
 
-   Timing: one 12s cycle shared by every element.
-     left  throws at  1%- 5%, its ball flies  4% -> 22%
-     right throws at 51%-55%, its ball flies 54% -> 72%
-   Everything else is idle, which keeps it calm rather than busy.
+   The layer covers the whole hero but sits at z-index 0 / pointer-events none,
+   while the hero text is z-index 1 - so a ball at the top of its arc passes
+   *behind* the title instead of covering it.
+
+   One shared 12s cycle:
+     left  winds up  2%, releases  4.2%, ball flies  4.2% -> 26%
+     right winds up 52%, releases 54.2%, ball flies 54.2% -> 76%
+   The rest of the cycle is a slow idle sway, so it stays calm, not busy.
 ---------------------------------------------------------------------------- */
 .snowfight {
   position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 33.333%;
+  inset: 0;
   z-index: 0;
   pointer-events: none;
-  /* hidden so the parked ball carrier can't widen the page; the peak below is
-     capped in vh so the arc always stays inside the band and never clips */
+  /* clips at the hero edges only, so the parked carrier can't widen the page */
   overflow: hidden;
   --sf-cycle: 12s;
   --sf-ball: clamp(12px, 1.2vw, 17px);
-  --sf-peak: min(clamp(56px, 8.5vw, 100px), 14vh);
+  /* release height, measured from the hero's bottom. Tracks the hand's height
+     at the moment of release (~66% of the character's height), whichever of
+     the two limits is smaller. */
+  --sf-hand: min(clamp(80px, 14.5vw, 139px), 20.5%);
+  /* rise from the hand up to roughly the title's line. The hero centres its
+     text block, so the title sits at ~57% of the hero height; subtracting the
+     hand height from that lands the apex on the title at any window size. */
+  --sf-peak: clamp(140px, calc(45vh - 46px), 460px);
   --sf-inset: clamp(4.5rem, 13vw, 12rem);
 }
 
@@ -739,50 +745,192 @@ html {
 .snowfight__char {
   position: absolute;
   bottom: 0;
-  width: auto;
-  height: clamp(104px, 21vw, 200px);
-  /* keep them inside the bottom third no matter how short the hero gets */
-  max-height: 92%;
-  opacity: .92;
-  /* the source art is a cropped scene, so feather the leftover background edges */
-  -webkit-mask-image: radial-gradient(100% 88% at 50% 50%, #000 62%, rgba(0, 0, 0, 0) 100%);
-  mask-image: radial-gradient(100% 88% at 50% 50%, #000 62%, rgba(0, 0, 0, 0) 100%);
+  height: clamp(120px, 22vw, 210px);
+  /* never taller than the bottom third of the hero */
+  max-height: 31%;
+  aspect-ratio: 120 / 300;
   will-change: transform;
 }
+.snowfight__char .sf-figure {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* The figure is drawn facing right, so the character on the right is mirrored
+   and the two look at each other. The mirror also flips rotation direction,
+   which is why both sides can share one set of throw keyframes. */
 .snowfight__char--left {
-  left: clamp(.25rem, 2vw, 3rem);
-  transform-origin: 62% 100%;
-  animation: sf-throw-left var(--sf-cycle) linear infinite;
+  left: clamp(.25rem, 2.5vw, 3.5rem);
 }
 .snowfight__char--right {
-  right: clamp(.25rem, 2vw, 3rem);
-  transform-origin: 38% 100%;
-  /* mirrored so the two face each other */
+  right: clamp(.25rem, 2.5vw, 3.5rem);
   transform: scaleX(-1);
-  animation: sf-throw-right var(--sf-cycle) linear infinite;
 }
 
-/* a wind-up, a release, then back to standing still */
-@keyframes sf-throw-left {
-  0%, 1%   { transform: rotate(0deg) translateY(0); }
-  2.8%     { transform: rotate(-3.2deg) translateY(-1px); }
-  4%       { transform: rotate(2.6deg) translateY(0); }
-  8%, 100% { transform: rotate(0deg) translateY(0); }
+/* ---- figure colours (the blog's winter palette) ---- */
+.sf-figure {
+  --sf-navy: #35506f;
+  --sf-navy-dark: #2a4159;
+  --sf-ink: #2a2a33;
 }
-@keyframes sf-throw-right {
-  0%, 51%   { transform: scaleX(-1) rotate(0deg) translateY(0); }
-  52.8%     { transform: scaleX(-1) rotate(-3.2deg) translateY(-1px); }
-  54%       { transform: scaleX(-1) rotate(2.6deg) translateY(0); }
-  58%, 100% { transform: scaleX(-1) rotate(0deg) translateY(0); }
+.sf-shadow { fill: rgba(22, 58, 95, .1); }
+.sf-coat {
+  fill: var(--sf-navy);
+  stroke: var(--sf-ink);
+  stroke-width: 1.6;
+  stroke-linejoin: round;
 }
+/* sleeves are a shade lighter than the coat, otherwise the arm disappears
+   into the body and the throw motion can't be read */
+.sf-sleeve {
+  fill: #3f5f82;
+  stroke: var(--sf-ink);
+  stroke-width: 1.6;
+  stroke-linejoin: round;
+}
+.sf-arm-back .sf-sleeve { fill: #2b4259; }
+.sf-quilt path {
+  fill: none;
+  stroke: rgba(255, 255, 255, .22);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
+.sf-zip {
+  fill: none;
+  stroke: var(--sf-navy-dark);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+.sf-pocket { fill: var(--sf-navy-dark); stroke: var(--sf-ink); stroke-width: 1.2; }
+.sf-pack-body { fill: #2c435b; stroke: var(--sf-ink); stroke-width: 1.5; }
+.sf-pack-pocket { fill: #365170; stroke: var(--sf-ink); stroke-width: 1.2; }
+.sf-pack-charm { fill: #e9d6c3; stroke: var(--sf-ink); stroke-width: 1.1; }
+.sf-pants { fill: #4d525d; stroke: var(--sf-ink); stroke-width: 1.5; stroke-linejoin: round; }
+.sf-boot { fill: #8d5c3c; stroke: var(--sf-ink); stroke-width: 1.5; stroke-linejoin: round; }
+.sf-mitten { fill: #c8a882; stroke: var(--sf-ink); stroke-width: 1.4; }
+.sf-face { fill: #f7dcc7; stroke: var(--sf-ink); stroke-width: 1.4; }
+.sf-hair,
+.sf-hair-long { fill: #241f28; stroke: var(--sf-ink); stroke-width: 1.2; }
+.sf-cheek { fill: rgba(240, 150, 140, .45); }
+.sf-eye { fill: #241f28; }
+.sf-smile { fill: none; stroke: #241f28; stroke-width: 1.4; stroke-linecap: round; }
+.sf-hood { fill: var(--sf-navy); stroke: var(--sf-ink); stroke-width: 1.6; }
+.sf-fur circle { fill: #cdb79b; stroke: #a68e72; stroke-width: 1; }
+.sf-hat { fill: #2b3a55; stroke: var(--sf-ink); stroke-width: 1.5; }
+.sf-hat-brim { fill: #35496b; stroke: var(--sf-ink); stroke-width: 1.5; }
+.sf-hat-tag { fill: #c8a882; stroke: var(--sf-ink); stroke-width: 1; }
+.sf-held { fill: #ffffff; stroke: #8fbdd6; stroke-width: 1.5; }
 
+/* ---- joints: pivots given in viewBox units ---- */
+.sf-torso,
+.sf-head,
+.sf-arm,
+.sf-forearm,
+.sf-arm-back,
+.sf-legs { transform-box: view-box; }
+.sf-torso    { transform-origin: 61px 204px; }
+.sf-head     { transform-origin: 61px  88px; }
+.sf-arm      { transform-origin: 74px 112px; }
+.sf-forearm  { transform-origin: 74px 146px; }
+.sf-arm-back { transform-origin: 48px 112px; }
+.sf-legs     { transform-origin: 61px 200px; }
+
+/* ---- the throw, split across body parts so it reads as one real motion ----
+   left character throws at 2%-12% of the cycle, the right one 6s later */
+.snowfight__char .sf-torso    { animation: sf-torso    var(--sf-cycle) linear infinite; }
+.snowfight__char .sf-head     { animation: sf-head     var(--sf-cycle) linear infinite; }
+.snowfight__char .sf-arm      { animation: sf-arm      var(--sf-cycle) linear infinite; }
+.snowfight__char .sf-forearm  { animation: sf-forearm  var(--sf-cycle) linear infinite; }
+.snowfight__char .sf-arm-back { animation: sf-armback  var(--sf-cycle) linear infinite; }
+.snowfight__char .sf-legs     { animation: sf-legs     var(--sf-cycle) linear infinite; }
+.snowfight__char .sf-held     { animation: sf-held     var(--sf-cycle) linear infinite; }
+
+.snowfight__char--right .sf-torso,
+.snowfight__char--right .sf-head,
+.snowfight__char--right .sf-arm,
+.snowfight__char--right .sf-forearm,
+.snowfight__char--right .sf-arm-back,
+.snowfight__char--right .sf-legs,
+.snowfight__char--right .sf-held { animation-delay: -6s; }
+
+/* hips: lean back on the wind-up, drive forward through the release */
+@keyframes sf-torso {
+  0%     { transform: rotate(0deg); }
+  2%     { transform: rotate(-3.5deg); animation-timing-function: cubic-bezier(.3, 0, .7, 1); }
+  4.2%   { transform: rotate(5deg); animation-timing-function: cubic-bezier(.2, .8, .3, 1); }
+  7%     { transform: rotate(2deg); }
+  12%    { transform: rotate(0deg); }
+  40%    { transform: rotate(.7deg); }
+  70%    { transform: rotate(0deg); }
+  100%   { transform: rotate(0deg); }
+}
+/* head stays pointed at the target while the body swings under it */
+@keyframes sf-head {
+  0%     { transform: rotate(0deg); }
+  2%     { transform: rotate(3deg); }
+  4.2%   { transform: rotate(-5deg); }
+  7%     { transform: rotate(-2deg); }
+  12%    { transform: rotate(0deg); }
+  40%    { transform: rotate(-1deg) translateY(-1px); }
+  70%    { transform: rotate(0deg); }
+  100%   { transform: rotate(0deg); }
+}
+/* shoulder: cock the arm back over the head, then whip it through */
+@keyframes sf-arm {
+  0%     { transform: rotate(0deg); }
+  1%     { transform: rotate(-8deg); animation-timing-function: cubic-bezier(.25, 0, .6, 1); }
+  2.6%   { transform: rotate(128deg); animation-timing-function: cubic-bezier(.5, 0, .4, 1); }
+  4.2%   { transform: rotate(-104deg); animation-timing-function: cubic-bezier(.2, .7, .35, 1); }
+  6%     { transform: rotate(-72deg); }
+  9%     { transform: rotate(-14deg); }
+  12%    { transform: rotate(0deg); }
+  42%    { transform: rotate(2deg); }
+  72%    { transform: rotate(0deg); }
+  100%   { transform: rotate(0deg); }
+}
+/* elbow: bends on the wind-up, snaps straight on release */
+@keyframes sf-forearm {
+  0%     { transform: rotate(0deg); }
+  2.6%   { transform: rotate(64deg); animation-timing-function: cubic-bezier(.5, 0, .35, 1); }
+  4.2%   { transform: rotate(-6deg); }
+  6.5%   { transform: rotate(16deg); }
+  12%    { transform: rotate(0deg); }
+  100%   { transform: rotate(0deg); }
+}
+/* far arm counterbalances the swing */
+@keyframes sf-armback {
+  0%     { transform: rotate(0deg); }
+  2.6%   { transform: rotate(-26deg); }
+  4.2%   { transform: rotate(22deg); }
+  7%     { transform: rotate(8deg); }
+  12%    { transform: rotate(0deg); }
+  46%    { transform: rotate(-2deg); }
+  76%    { transform: rotate(0deg); }
+  100%   { transform: rotate(0deg); }
+}
+/* a small weight shift through the legs */
+@keyframes sf-legs {
+  0%     { transform: translate(0, 0); }
+  2.6%   { transform: translate(-2px, 1px); }
+  4.2%   { transform: translate(2px, -1px); }
+  7%     { transform: translate(1px, 0); }
+  12%    { transform: translate(0, 0); }
+  100%   { transform: translate(0, 0); }
+}
+/* the held snowball vanishes the instant it is released */
+@keyframes sf-held {
+  0%, 4.1%  { opacity: 1; }
+  4.2%, 99% { opacity: 0; }
+  100%      { opacity: 1; }
+}
 /* the track spans hand-to-hand; the carrier is full width, so translateX(100%)
    walks the ball exactly from one hand to the other at any screen size */
 .snowfight__track {
   position: absolute;
   left: var(--sf-inset);
   right: var(--sf-inset);
-  bottom: 44%;
+  bottom: var(--sf-hand);
   height: 0;
 }
 .snowfight__carrier {
@@ -802,12 +950,12 @@ html {
 
 /* constant horizontal speed - the arc comes from the vertical animation */
 @keyframes sf-cross-right {
-  0%, 4%       { transform: translateX(0); }
-  22%, 100%    { transform: translateX(100%); }
+  0%, 4.2%    { transform: translateX(0); }
+  26%, 100%   { transform: translateX(100%); }
 }
 @keyframes sf-cross-left {
-  0%, 54%      { transform: translateX(100%); }
-  72%, 100%    { transform: translateX(0); }
+  0%, 54.2%   { transform: translateX(100%); }
+  76%, 100%   { transform: translateX(0); }
 }
 
 .snowfight__ball {
@@ -832,25 +980,26 @@ html {
   animation: sf-arc-left var(--sf-cycle) linear infinite;
 }
 
-/* rise decelerates, fall accelerates - reads as gravity rather than a bounce */
+/* rise decelerates, fall accelerates - reads as gravity rather than a bounce.
+   apex sits at the midpoint of each flight window */
 @keyframes sf-arc-right {
-  0%, 4%    { transform: translateY(0); opacity: 0; animation-timing-function: cubic-bezier(.05, .5, .35, 1); }
-  4.8%      { opacity: 1; }
-  13%       { transform: translateY(calc(var(--sf-peak) * -1)); animation-timing-function: cubic-bezier(.55, 0, .95, .5); }
-  21%       { opacity: 1; }
-  22%       { transform: translateY(0); opacity: 0; }
+  0%, 4.2%  { transform: translateY(0); opacity: 0; animation-timing-function: cubic-bezier(.12, .58, .4, 1); }
+  5%        { opacity: 1; }
+  15.1%     { transform: translateY(calc(var(--sf-peak) * -1)); animation-timing-function: cubic-bezier(.5, 0, .9, .45); }
+  25%       { opacity: 1; }
+  26%       { transform: translateY(0); opacity: 0; }
   100%      { transform: translateY(0); opacity: 0; }
 }
 @keyframes sf-arc-left {
-  0%, 54%   { transform: translateY(0); opacity: 0; animation-timing-function: cubic-bezier(.05, .5, .35, 1); }
-  54.8%     { opacity: 1; }
-  63%       { transform: translateY(calc(var(--sf-peak) * -1)); animation-timing-function: cubic-bezier(.55, 0, .95, .5); }
-  71%       { opacity: 1; }
-  72%       { transform: translateY(0); opacity: 0; }
+  0%, 54.2% { transform: translateY(0); opacity: 0; animation-timing-function: cubic-bezier(.12, .58, .4, 1); }
+  55%       { opacity: 1; }
+  65.1%     { transform: translateY(calc(var(--sf-peak) * -1)); animation-timing-function: cubic-bezier(.5, 0, .9, .45); }
+  75%       { opacity: 1; }
+  76%       { transform: translateY(0); opacity: 0; }
   100%      { transform: translateY(0); opacity: 0; }
 }
 
-/* not enough vertical room for a bottom third worth showing */
+/* not enough vertical room to stage a snowball fight */
 @media (max-height: 520px) {
   .snowfight { display: none; }
 }
@@ -860,6 +1009,7 @@ html {
   .snowfight__carrier,
   .snowfight__ball { animation: none !important; }
   .snowfight__ball { display: none; }
+  .snowfight__char--left { transform: scaleX(-1); }
 }
 
 .frozen-section {
