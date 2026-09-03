@@ -36,6 +36,12 @@
   var RATE = 0.35;      // well under life speed, to keep the hero calm
   var ALPHA_LO = 8 / 255;   // <= this far from the backdrop colour -> transparent
   var ALPHA_HI = 22 / 255;  // >= this far -> fully opaque, with a soft ramp between
+  // 1280x720 is the clip's own resolution, so there is no more real detail to
+  // be had. On a 2x display the canvas is still upscaled (~1280 -> ~1700
+  // device pixels) and the browser's bilinear filter softens it, so an unsharp
+  // mask buys back some of the crispness. Kept low - past ~0.5 it starts
+  // ringing on the figures' outlines.
+  var SHARPEN = 0.35;
 
   var canvas = document.querySelector('.snowfight__canvas');
   var video = document.querySelector('.snowfight__source');
@@ -63,10 +69,19 @@
     'uniform sampler2D u_tex;',
     'uniform float u_lo;',
     'uniform float u_hi;',
+    'uniform float u_sharpen;',
+    'uniform vec2 u_texel;',
     'varying vec2 v_uv;',
     'void main() {',
     '  vec3 src = texture2D(u_tex, v_uv).rgb;',
-    // every corner of the frame is backdrop, so one of them is the key colour
+    // unsharp mask: a 4-tap cross blur, then push the centre away from it
+    '  vec3 blur = texture2D(u_tex, v_uv + vec2(u_texel.x, 0.0)).rgb',
+    '            + texture2D(u_tex, v_uv - vec2(u_texel.x, 0.0)).rgb',
+    '            + texture2D(u_tex, v_uv + vec2(0.0, u_texel.y)).rgb',
+    '            + texture2D(u_tex, v_uv - vec2(0.0, u_texel.y)).rgb;',
+    '  src = clamp(src + (src - blur * 0.25) * u_sharpen, 0.0, 1.0);',
+    // every corner of the frame is backdrop, so one of them is the key colour.
+    // Sampled raw, because sharpening a flat area leaves it unchanged anyway.
     '  vec3 key = texture2D(u_tex, vec2(0.002, 0.002)).rgb;',
     '  vec3 diff = abs(src - key);',
     '  float m = max(max(diff.r, diff.g), diff.b);',
@@ -104,6 +119,15 @@
 
   gl.uniform1f(gl.getUniformLocation(prog, 'u_lo'), ALPHA_LO);
   gl.uniform1f(gl.getUniformLocation(prog, 'u_hi'), ALPHA_HI);
+  gl.uniform1f(gl.getUniformLocation(prog, 'u_sharpen'), SHARPEN);
+
+  var texelLoc = gl.getUniformLocation(prog, 'u_texel');
+  function setTexel() { gl.uniform2f(texelLoc, 1 / canvas.width, 1 / canvas.height); }
+  // set from the markup's width/height straight away: the clip is very likely
+  // exactly that size, in which case sizeToSource has nothing to change and
+  // would never get round to setting it. A zero texel silently cancels the
+  // unsharp mask, because all four taps then land on the centre pixel.
+  setTexel();
 
   var tex = gl.createTexture();
   gl.bindTexture(gl.TEXTURE_2D, tex);
@@ -125,6 +149,7 @@
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
     gl.viewport(0, 0, canvas.width, canvas.height);
+    setTexel();
   }
 
   function paint(now) {
