@@ -32,8 +32,11 @@
   is decorative, and a still white rectangle would be worse than nothing.
 */
 (function () {
-  var FPS = 15;         // the clip runs slowed down, so there is little to gain above this
-  var RATE = 0.35;      // well under life speed, to keep the hero calm
+  // At RATE the clip yields only ~4 unique frames a second, so painting much
+  // faster than this just re-keys frames that have not changed. Kept above the
+  // unique-frame rate so no frame is held a beat longer than it should be.
+  var FPS = 10;
+  var RATE = 0.175;     // far under life speed, to keep the hero calm
   var ALPHA_LO = 8 / 255;   // <= this far from the backdrop colour -> transparent
   var ALPHA_HI = 22 / 255;  // >= this far -> fully opaque, with a soft ramp between
   // 1280x720 is the clip's own resolution, so there is no more real detail to
