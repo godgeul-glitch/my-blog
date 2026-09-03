@@ -17,24 +17,15 @@ show_title: false
   </div>
 
   {%- comment -%}
-    Snowball fight in the hero's bottom third. Purely decorative, sits behind
-    .hero-frozen__inner (z-index 1) so the text always wins.
+    Snowball fight across the bottom of the hero. Purely decorative: it sits
+    behind .hero-frozen__inner (z-index 1) so the title always wins, and it is
+    muted / autoplaying / looping so it never asks the reader for anything.
   {%- endcomment -%}
   <div class="snowfight" aria-hidden="true">
-    <div class="snowfight__stage">
-      <div class="snowfight__char snowfight__char--left">
-        {%- include svg/snowfight-kid.svg variant="girl" -%}
-      </div>
-      <div class="snowfight__char snowfight__char--right">
-        {%- include svg/snowfight-kid.svg variant="boy" -%}
-      </div>
-      <div class="snowfight__track snowfight__track--rightward">
-        <div class="snowfight__carrier"><span class="snowfight__ball"></span></div>
-      </div>
-      <div class="snowfight__track snowfight__track--leftward">
-        <div class="snowfight__carrier"><span class="snowfight__ball"></span></div>
-      </div>
-    </div>
+    <video class="snowfight__video"
+           src="{{ '/assets/video/snowfight.mp4' | relative_url }}"
+           autoplay muted loop playsinline preload="auto"
+           disablepictureinpicture disableremoteplayback></video>
   </div>
 </div>
 
