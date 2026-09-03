@@ -43,8 +43,18 @@ show_title: false
       <div class="frost-panel about-flex__text">
         {{ content }}
       </div>
-      <div class="about-flex__art" aria-hidden="true">
-        {%- include svg/fox.svg -%}
+      <div class="about-flex__art">
+        {%- comment -%}
+          Decorative, but it is the only illustration on the page, so it keeps a
+          real alt rather than aria-hidden. Sized below the fold, so it loads
+          lazily; width/height are set so the section does not reflow when it
+          arrives.
+        {%- endcomment -%}
+        <img class="frost-snowman"
+             src="{{ '/assets/images/snowman.png' | relative_url }}"
+             alt="검정 방울 비니와 체크 목도리를 하고 나뭇가지 팔을 벌린 눈사람"
+             width="480" height="696"
+             loading="lazy" decoding="async">
       </div>
     </div>
   </div>
