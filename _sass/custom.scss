@@ -727,11 +727,19 @@ html {
 
 .snowfight__canvas {
   display: block;
-  /* two thirds of the hero's width, centred. Scaling the whole frame keeps the
-     figures in proportion with each other and with the snow they stand on; the
-     side effect is that they sit further in from the page edges than the clip
-     framed them. */
-  width: 66.667%;
+  /* 85% of the hero's width, centred.
+
+     Figure size and figure placement are rigidly coupled here: the two are a
+     fixed distance apart in the clip (measured off the keyed output, they span
+     8.9%-30.9% and 72.3%-91.2% of the frame), so any uniform scale that shrinks
+     them also pulls them towards the middle. The figure edge lands at
+     (1 - w)/2 + 0.089w of the hero's width, so at w = 85% they sit 15.1% in
+     from each page edge - against 22.6% at 2/3 width and 8.9% at full width.
+
+     Pushing them right out to the edges at a smaller size would mean stretching
+     the empty middle band by 2.6x, and the snowball crosses exactly that band -
+     its horizontal speed would jump 2.6x on the way over. Not worth it. */
+  width: 85%;
   margin: 0 auto;
   /* the source is 16/9 - honouring it is what keeps the figures whole */
   height: auto;
