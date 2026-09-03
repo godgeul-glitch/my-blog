@@ -727,7 +727,12 @@ html {
 
 .snowfight__canvas {
   display: block;
-  width: 100%;
+  /* two thirds of the hero's width, centred. Scaling the whole frame keeps the
+     figures in proportion with each other and with the snow they stand on; the
+     side effect is that they sit further in from the page edges than the clip
+     framed them. */
+  width: 66.667%;
+  margin: 0 auto;
   /* the source is 16/9 - honouring it is what keeps the figures whole */
   height: auto;
   aspect-ratio: 16 / 9;
