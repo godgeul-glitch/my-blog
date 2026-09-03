@@ -823,7 +823,8 @@ html {
 }
 .about-flex__art {
   flex: 0 0 auto;
-  width: min(260px, 80vw);
+  /* a third of what the fox illustration used to take (260px / 80vw) */
+  width: min(87px, 27vw);
   margin: 0 auto;
 }
 .frost-fox,
