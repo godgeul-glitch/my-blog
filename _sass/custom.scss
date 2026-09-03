@@ -702,16 +702,17 @@ html {
 }
 
 /* ---- hero snowball fight ----------------------------------------------------
-   The animation is a video clip laid across the bottom of the hero.
+   A canvas across the bottom of the hero, painted by assets/js/snowfight.js.
 
-   Two things make it sit in the page instead of looking like an embedded box:
-     - mix-blend-mode: multiply. The clip's background is white, and multiply
-       leaves the backdrop untouched wherever the source is white, so the hero's
-       snowflake gradient shows straight through and only the two figures and
-       their shadows are painted. No alpha channel needed.
-     - a mask that fades the clip out at the left, right and top edges, so there
-       is no visible seam where the footage ends.
+   The characters are keyed out of the source clip in JS rather than composited
+   here, because the two CSS-only routes both failed: mix-blend-mode: multiply
+   silently does not apply to a <video> (Chromium composites it on its own
+   layer, so the clip's flat backdrop painted over the hero as opaque white),
+   and object-fit: cover crops the frame to the container's aspect ratio, which
+   took the characters' heads off. See the note at the top of that file.
 
+   The canvas keeps the clip's 16/9 ratio at full width, so nothing is cropped
+   and the figures stay out at the left and right edges where they were shot.
    It sits at z-index 0 while .hero-frozen__inner is z-index 1, so the title is
    never covered.
 ---------------------------------------------------------------------------- */
@@ -720,36 +721,21 @@ html {
   left: 0;
   right: 0;
   bottom: 0;
-  /* the bottom slice of the hero - the figures stand on this line */
-  height: clamp(170px, 36%, 360px);
   z-index: 0;
   pointer-events: none;
-  overflow: hidden;
 }
 
-.snowfight__video {
+.snowfight__canvas {
   display: block;
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-  /* anchor the crop to the bottom of the frame, so the snow the figures stand
-     on lines up with the bottom of the hero and no feet get cut off */
-  object-position: center bottom;
-  mix-blend-mode: multiply;
-  /* the clip's background is a hair off white (254), which multiply would show
-     as a faint grey rectangle over the hero - this lifts it to a true white */
-  filter: brightness(1.04);
-  /* feather the three cut edges into the hero. The side fades stay narrow -
-     the characters stand at roughly 12% and 88% across, so a wider fade would
-     start eating into them. */
-  -webkit-mask-image:
-    linear-gradient(to right, transparent 0, #000 5%, #000 95%, transparent 100%),
-    linear-gradient(to bottom, transparent 0, #000 22%);
-  mask-image:
-    linear-gradient(to right, transparent 0, #000 5%, #000 95%, transparent 100%),
-    linear-gradient(to bottom, transparent 0, #000 22%);
-  -webkit-mask-composite: source-in;
-  mask-composite: intersect;
+  /* the source is 16/9 - honouring it is what keeps the figures whole */
+  height: auto;
+  aspect-ratio: 16 / 9;
+}
+
+/* the clip is only ever read from, never shown */
+.snowfight__source {
+  display: none;
 }
 
 /* not enough vertical room to stage a snowball fight */

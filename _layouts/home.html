@@ -18,15 +18,22 @@ show_title: false
 
   {%- comment -%}
     Snowball fight across the bottom of the hero. Purely decorative: it sits
-    behind .hero-frozen__inner (z-index 1) so the title always wins, and it is
-    muted / autoplaying / looping so it never asks the reader for anything.
+    behind .hero-frozen__inner (z-index 1) so the title always wins.
+
+    The clip has no alpha channel, so assets/js/snowfight.js keys the two
+    characters out of it frame by frame and paints them into the canvas - that
+    is what lets the hero's own snowflake background show through behind them
+    instead of a white video rectangle. The <video> itself is never displayed;
+    it is only the source the canvas reads from.
   {%- endcomment -%}
   <div class="snowfight" aria-hidden="true">
-    <video class="snowfight__video"
+    <canvas class="snowfight__canvas" width="960" height="540"></canvas>
+    <video class="snowfight__source"
            src="{{ '/assets/video/snowfight.mp4' | relative_url }}"
-           autoplay muted loop playsinline preload="auto"
+           muted loop playsinline preload="auto"
            disablepictureinpicture disableremoteplayback></video>
   </div>
+  <script src="{{ '/assets/js/snowfight.js' | relative_url }}" defer></script>
 </div>
 
 <section id="about" class="frozen-section frozen-section--about">
