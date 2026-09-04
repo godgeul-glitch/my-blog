@@ -62,16 +62,31 @@
             {%- include snippets/get-nav-url.html path=page.url -%}
             {%- assign _page_url = __return -%}
             {%- include snippets/get-string-from-locale-config.html locale=_item.titles -%}
-            {%- if _nav_url == _page_url or page.nav_key and _item.key and page.nav_key == _item.key -%}
+            {%- comment -%}
+              The first entry and every post category share one dropdown, so the
+              nav stays one item wide however many categories exist. Reuses the
+              hamburger's .header__category-menu / -dropdown pair, which already
+              opens on hover and on keyboard focus.
+            {%- endcomment -%}
+            {%- if forloop.index == 1 -%}
+              <li class="navigation__item header__category-menu header__nav-group">
+                <button type="button" class="header__nav-group-toggle" aria-haspopup="true">
+                  카테고리<i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="header__category-dropdown header__category-dropdown--right">
+                  <ul>
+                    <li{% if _nav_url == _page_url %} class="navigation__item--active"{% endif %}><a href="{{ _nav_url }}">{%- if _item.title -%}{{ _item.title }}{%- else -%}{{ __return }}{%- endif -%}</a></li>
+                    {%- for _category in site.categories -%}
+                      {%- assign _cat_post = _category[1].first -%}
+                      <li><a href="{{ _cat_post.url | relative_url }}{% if _cat_post.highlight_anchor %}#{{ _cat_post.highlight_anchor }}{% endif %}">{{ _category[0] }}</a></li>
+                    {%- endfor -%}
+                  </ul>
+                </div>
+              </li>
+            {%- elsif _nav_url == _page_url or page.nav_key and _item.key and page.nav_key == _item.key -%}
               <li class="navigation__item navigation__item--active"><a href="{{ _nav_url }}">{%- if _item.title -%}{{ _item.title }}{%- else -%}{{ __return }}{%- endif -%}</a></li>
             {%- else -%}
               <li class="navigation__item"><a href="{{ _nav_url }}">{%- if _item.title -%}{{ _item.title }}{%- else -%}{{ __return }}{%- endif -%}</a></li>
-            {%- endif -%}
-            {%- if forloop.index == 1 -%}
-              {%- for _category in site.categories -%}
-                {%- assign _cat_post = _category[1].first -%}
-                <li class="navigation__item"><a href="{{ _cat_post.url | relative_url }}{% if _cat_post.highlight_anchor %}#{{ _cat_post.highlight_anchor }}{% endif %}">{{ _category[0] }}</a></li>
-              {%- endfor -%}
             {%- endif -%}
           {%- endfor -%}
           {%- if site.search.provider -%}

@@ -443,6 +443,40 @@ body::after {
   text-shadow: 0 0 10px rgba(144, 224, 239, .7);
 }
 
+/* ---- nav group: one nav item holding the page link and every category ----
+   The <li> borrows .header__category-menu, so hover/focus opening and the
+   dropdown's list styling come from the hamburger's rules already above.
+   Only two things are specific to the nav: the toggle has to pass for one of
+   the sibling links, and the panel has to open leftwards, because the nav sits
+   against the right edge of the header. */
+.header__nav-group {
+  /* the hamburger's gap would push the next nav item away */
+  margin-right: 0;
+}
+.header__nav-group-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  padding: 0;
+  border: none;
+  background: transparent;
+  /* match the sibling <a> rather than the browser's button defaults */
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+.header__nav-group-toggle .fa-chevron-down {
+  font-size: .7em;
+  opacity: .75;
+}
+.header__nav-group:hover .header__nav-group-toggle .fa-chevron-down {
+  transform: rotate(180deg);
+}
+.header__category-dropdown--right {
+  left: auto;
+  right: 0;
+}
+
 /* ---- header search: search box in its own column so nav never overlaps it ---- */
 .header .main {
   position: relative;
