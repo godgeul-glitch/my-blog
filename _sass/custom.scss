@@ -437,6 +437,12 @@ body::after {
 .navigation {
   position: relative;
   z-index: 1;
+  /* the theme makes this a horizontal scroll container (overflow: hidden;
+     overflow-x: auto) so a long nav can be swiped. That box clips the nav
+     group's dropdown at the header's edge, and an ancestor's overflow cannot
+     be escaped by an absolutely positioned child - so it has to go. Safe now
+     that the nav is four fixed items and no longer grows with the categories. */
+  overflow: visible;
 }
 
 .navigation__item--active a {
@@ -449,10 +455,6 @@ body::after {
    Only two things are specific to the nav: the toggle has to pass for one of
    the sibling links, and the panel has to open leftwards, because the nav sits
    against the right edge of the header. */
-.header__nav-group {
-  /* the hamburger's gap would push the next nav item away */
-  margin-right: 0;
-}
 .header__nav-group-toggle {
   display: inline-flex;
   align-items: center;
@@ -460,10 +462,17 @@ body::after {
   padding: 0;
   border: none;
   background: transparent;
-  /* match the sibling <a> rather than the browser's button defaults */
+  /* match the sibling <a> rather than the browser's button defaults. The
+     theme's header colour rule only targets `a`, so `inherit` would pick up
+     the body text colour and go dark-on-dark - the colour is set literally,
+     to the same value that rule uses. */
   font: inherit;
-  color: inherit;
+  color: #eaf6fb;
   cursor: pointer;
+}
+.header__nav-group:hover .header__nav-group-toggle,
+.header__nav-group-toggle:focus-visible {
+  color: var(--frost-blue);
 }
 .header__nav-group-toggle .fa-chevron-down {
   font-size: .7em;
